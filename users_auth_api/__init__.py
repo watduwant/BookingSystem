@@ -1,0 +1,1 @@
+default_app_config = 'users_auth_api.apps.StockapiConfig'
