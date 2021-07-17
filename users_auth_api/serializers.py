@@ -56,3 +56,12 @@ class UserTrialSerializer(serializers.Serializer):
 
 class UserStockPermissionsSerializer(serializers.Serializer):
     permissions = serializers.CharField()
+
+
+class UserSubscriptionSerializer(serializers.ModelSerializer):
+    """
+    Serializer for requesting a user subscription.
+    """
+    class Meta:
+        model = UserProfile
+        fields = ('django_tutorial_subscription','angular_tutorial_subscription','django_project_subscription','angular_project_subscription')

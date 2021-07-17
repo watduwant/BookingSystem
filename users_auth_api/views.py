@@ -1,14 +1,18 @@
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 from .permissions import IsLoggedInUserOrAdmin
-from .models import User
+from .models import User, UserProfile
 from datetime import datetime, timedelta
+from django.utils.translation import gettext_lazy as _
 
+from rest_framework.decorators import action
 # Create your views here.
-from .serializers import UserSerializer, UserTrialSerializer, UserStockPermissionsSerializer
+from .serializers import UserSerializer, UserSubscriptionSerializer, UserTrialSerializer, UserStockPermissionsSerializer
 import requests
+
+from users_auth_api import serializers
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -27,6 +31,15 @@ class UserViewSet(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
 
 
+        
+
+
+class UserSubscriptionViewSet(viewsets.ModelViewSet):
+
+    queryset = UserProfile.objects.all()
+    serializer_class = UserSubscriptionSerializer
+    
+
 @api_view()
 def UserSubscribedViewSet(request):
     user = request.user
@@ -37,6 +50,8 @@ def UserSubscribedViewSet(request):
             "angular_tutorial_subscription": user.profile.angular_tutorial_subscription,
             "django_project_subscription": user.profile.django_project_subscription,
             "angular_project_subscription": user.profile.angular_project_subscription,
+
+
         }
     ]
 
