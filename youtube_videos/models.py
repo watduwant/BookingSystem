@@ -15,7 +15,7 @@ class HtmlVideo(models.Model):
         return self.desc
 
 @receiver(post_save, sender=HtmlVideo, dispatch_uid="knowledge_push_notification")
-def post_save_youtube_video_receiver(sender, instance, *args, **kwargs):
+def post_save_html_video_receiver(sender, instance, *args, **kwargs):
     devices = FCMDevice.objects.all()
     devices.send_message(
         title="Django Tutorial New Html Video ({})".format(instance.title),
@@ -35,7 +35,7 @@ class CssVideo(models.Model):
         return self.desc
 
 @receiver(post_save, sender=CssVideo, dispatch_uid="knowledge_push_notification")
-def post_save_youtube_video_receiver(sender, instance, *args, **kwargs):
+def post_save_css_video_receiver(sender, instance, *args, **kwargs):
     devices = FCMDevice.objects.all()
     devices.send_message(
         title="Django Tutorial New Css Video ({})".format(instance.title),
@@ -54,7 +54,7 @@ class PythonVideo(models.Model):
         return self.desc
 
 @receiver(post_save, sender=PythonVideo, dispatch_uid="knowledge_push_notification")
-def post_save_youtube_video_receiver(sender, instance, *args, **kwargs):
+def post_save_python_video_receiver(sender, instance, *args, **kwargs):
     devices = FCMDevice.objects.all()
     devices.send_message(
         title="Django Tutorial New Python Video ({})".format(instance.title),
@@ -73,7 +73,7 @@ class javascriptVideo(models.Model):
         return self.desc
 
 @receiver(post_save, sender=javascriptVideo, dispatch_uid="knowledge_push_notification")
-def post_save_youtube_video_receiver(sender, instance, *args, **kwargs):
+def post_save_javascript_video_receiver(sender, instance, *args, **kwargs):
     devices = FCMDevice.objects.all()
     devices.send_message(
         title="Django Tutorial New JavaScript Video ({})".format(instance.title),
@@ -92,7 +92,7 @@ class DjangoVideo(models.Model):
         return self.desc
 
 @receiver(post_save, sender=DjangoVideo, dispatch_uid="knowledge_push_notification")
-def post_save_youtube_video_receiver(sender, instance, *args, **kwargs):
+def post_save_django_video_receiver(sender, instance, *args, **kwargs):
     devices = FCMDevice.objects.all()
     devices.send_message(
         title="Django Tutorial New Django Video ({})".format(instance.title),
@@ -111,7 +111,7 @@ class AngularVideo(models.Model):
         return self.desc
 
 @receiver(post_save, sender=AngularVideo, dispatch_uid="knowledge_push_notification")
-def post_save_youtube_video_receiver(sender, instance, *args, **kwargs):
+def post_save_angular_video_receiver(sender, instance, *args, **kwargs):
     devices = FCMDevice.objects.all()
     devices.send_message(
         title="Django Tutorial New Angular Video ({})".format(instance.title),
@@ -130,7 +130,7 @@ class DjangoProjectVideo(models.Model):
         return self.desc
 
 @receiver(post_save, sender=DjangoProjectVideo, dispatch_uid="knowledge_push_notification")
-def post_save_youtube_video_receiver(sender, instance, *args, **kwargs):
+def post_save_django_project_video_receiver(sender, instance, *args, **kwargs):
     devices = FCMDevice.objects.all()
     devices.send_message(
         title="Django Tutorial New Django Project Video ({})".format(instance.title),
@@ -149,7 +149,7 @@ class AngularProjectsVideo(models.Model):
         return self.desc
 
 @receiver(post_save, sender=AngularProjectsVideo, dispatch_uid="knowledge_push_notification")
-def post_save_youtube_video_receiver(sender, instance, *args, **kwargs):
+def post_save_angular_project_video_receiver(sender, instance, *args, **kwargs):
     devices = FCMDevice.objects.all()
     devices.send_message(
         title="Django Tutorial New Angular Project Video ({})".format(instance.title),
