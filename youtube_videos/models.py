@@ -136,7 +136,7 @@ def post_save_youtube_video_receiver(sender, instance, *args, **kwargs):
         title="Django Tutorial New Django Project Video ({})".format(instance.title),
         body="{}".format(instance.desc),
         color="#ffa813",
-        data={"type": "django video", "description": instance.desc}
+        data={"type": "django project video", "description": instance.desc}
     )
 
 class AngularProjectsVideo(models.Model):
@@ -155,5 +155,5 @@ def post_save_youtube_video_receiver(sender, instance, *args, **kwargs):
         title="Django Tutorial New Angular Project Video ({})".format(instance.title),
         body="{}".format(instance.desc),
         color="#ffa813",
-        data={"type": "html video", "description": instance.desc}
+        data={"type": "angular project video", "description": instance.desc}
     )
