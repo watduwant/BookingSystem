@@ -20,7 +20,7 @@ def post_save_html_video_receiver(sender, instance, *args, **kwargs):
     devices.send_message(
         title="Django Tutorial New Html Video ({})".format(instance.title),
         body="{}".format(instance.desc),
-        color="#ffa813",
+        color="#150485",
         data={"type": "html video", "description": instance.desc}
     )
 
@@ -40,7 +40,7 @@ def post_save_css_video_receiver(sender, instance, *args, **kwargs):
     devices.send_message(
         title="Django Tutorial New Css Video ({})".format(instance.title),
         body="{}".format(instance.desc),
-        color="#ffa813",
+        color="#150485",
         data={"type": "css video", "description": instance.desc}
     )
 
@@ -59,7 +59,7 @@ def post_save_python_video_receiver(sender, instance, *args, **kwargs):
     devices.send_message(
         title="Django Tutorial New Python Video ({})".format(instance.title),
         body="{}".format(instance.desc),
-        color="#ffa813",
+        color="#150485",
         data={"type": "python video", "description": instance.desc}
     )
 
@@ -78,7 +78,7 @@ def post_save_javascript_video_receiver(sender, instance, *args, **kwargs):
     devices.send_message(
         title="Django Tutorial New JavaScript Video ({})".format(instance.title),
         body="{}".format(instance.desc),
-        color="#ffa813",
+        color="#150485",
         data={"type": "javascript video", "description": instance.desc}
     )
 
@@ -97,7 +97,7 @@ def post_save_django_video_receiver(sender, instance, *args, **kwargs):
     devices.send_message(
         title="Django Tutorial New Django Video ({})".format(instance.title),
         body="{}".format(instance.desc),
-        color="#ffa813",
+        color="#150485",
         data={"type": "django video", "description": instance.desc}
     )
 
@@ -116,7 +116,7 @@ def post_save_angular_video_receiver(sender, instance, *args, **kwargs):
     devices.send_message(
         title="Django Tutorial New Angular Video ({})".format(instance.title),
         body="{}".format(instance.desc),
-        color="#ffa813",
+        color="#150485",
         data={"type": "angular video", "description": instance.desc}
     )
 
@@ -135,7 +135,7 @@ def post_save_django_project_video_receiver(sender, instance, *args, **kwargs):
     devices.send_message(
         title="Django Tutorial New Django Project Video ({})".format(instance.title),
         body="{}".format(instance.desc),
-        color="#ffa813",
+        color="#150485",
         data={"type": "django project video", "description": instance.desc}
     )
 
@@ -154,6 +154,6 @@ def post_save_angular_project_video_receiver(sender, instance, *args, **kwargs):
     devices.send_message(
         title="Django Tutorial New Angular Project Video ({})".format(instance.title),
         body="{}".format(instance.desc),
-        color="#ffa813",
+        color="#150485",
         data={"type": "angular project video", "description": instance.desc}
     )
