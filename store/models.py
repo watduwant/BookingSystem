@@ -1,10 +1,18 @@
 from django.db import models
+from django.contrib.auth.models import User
+from auth_app.models import Profile
 
 # Create your models here.
+
 class Shop(models.Model):
+    shop_status = (
+        ('E', 'ENABLE'),
+        ('D', 'DISABLE')
+    )
     Name          = models.CharField(max_length=190, unique=True)
+    shop_owner    = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
     Address       = models.CharField(max_length=300)
-    Status        = models.IntegerField()
+    Status        = models.CharField(max_length=2, choices=shop_status, default='E')
     Image         = models.ImageField(upload_to='shops', blank=True, null=True)
     opening_time  = models.TimeField(null=True, blank=True)
     closing_time  = models.TimeField(null=True, blank=True)

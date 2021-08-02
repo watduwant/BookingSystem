@@ -18,15 +18,18 @@ from django.urls import path,include
 from django.conf.urls import url
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.authtoken.views import obtain_auth_token
+
 
 urlpatterns = [
                 path('admin/', admin.site.urls),
                 path('customer/',include('customer.urls'),name='customer'),
                 path('store/',include('store.urls'),name='store'),
+                path('api/auth', obtain_auth_token,name='auth'),
                 path('api/',include('api.urls'),name='api'),
-                path('api-auth/', include('rest_framework.urls')),
-                path('api/dj-rest-auth/', include('dj_rest_auth.urls')),
-                path('api/dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+                # path('api-auth/', include('rest_framework.urls')),
+                # path('api/dj-rest-auth/', include('dj_rest_auth.urls')),
+                #path('api/dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
              ]
 
 urlpatterns += static(settings.STATIC_URL , document_root = settings.STATIC_ROOT)
