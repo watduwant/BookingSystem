@@ -18,12 +18,12 @@ class DoctorSerializer(serializers.ModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Service
-        fields = ['id', 'Clinic', 'Doctor', 'Date']
+        fields = ['id', 'Clinic', 'Doctor', 'day']
 
 class ServicedetailSerializer(serializers.ModelSerializer):
     class Meta:
         model  = ServiceDetails
-        fields = ['id', 'ServiceID', 'Time', 'Fees', 'day', 'Visit_capacity']
+        fields = ['id', 'ServiceID', 'Time', 'Fees', 'Visit_capacity']
 
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:

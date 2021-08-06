@@ -24,13 +24,6 @@ class Doctor(models.Model):
 
 
 class Service(models.Model):
-
-    Clinic = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True, blank=True)
-    Doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True, blank=True)
-    Date = models.DateField()
-
-
-class ServiceDetails(models.Model):
     DayChoices = (
         ('S', 'SUNDAY'),
         ('M', 'MONDAY'),
@@ -40,8 +33,13 @@ class ServiceDetails(models.Model):
         ('F', 'FRIDAY'),
         ('ST', 'SATURDAY')
     )
+    Clinic = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True, blank=True)
+    day = models.CharField(max_length=2, choices=DayChoices, null=True)
+    Doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True, blank=True)
+
+
+class ServiceDetails(models.Model):
     ServiceID = models.ForeignKey(Service, on_delete=models.CASCADE, null=True, blank=True)
     Time = models.TimeField()
     Fees = models.IntegerField()
-    day = models.CharField(max_length=2, choices=DayChoices, null=True)
     Visit_capacity = models.IntegerField()
