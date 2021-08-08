@@ -7,6 +7,7 @@ from django.dispatch import receiver
 statuses = (('cr', 'customer'), ('so', 'shopowner'))
 class Profile(models.Model):
     user         = models.OneToOneField(User, on_delete=models.CASCADE)
+    email        = models.EmailField()
     profile_pic  = models.ImageField(upload_to='profile_pics', blank=True, null=True)
     phone        = models.CharField(max_length=15, blank=True)
     status       = models.CharField(max_length=20, null=True, choices=statuses, default=statuses[0][1])

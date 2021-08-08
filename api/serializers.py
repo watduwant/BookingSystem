@@ -33,7 +33,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Profile
-        fields = ['id', 'user', 'profile_pic', 'phone', 'status', 'city', 'pincode']
+        fields = ['id', 'email', 'user', 'profile_pic', 'phone', 'status', 'city', 'pincode']
 
 
 class UserSerializer(serializers.ModelSerializer):
