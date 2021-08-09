@@ -17,10 +17,16 @@ class Shop(models.Model):
     opening_time  = models.TimeField(null=True, blank=True)
     closing_time  = models.TimeField(null=True, blank=True)
 
+    def __str__(self):
+        return self.Name
+
 class Doctor(models.Model):
     Name           = models.CharField(max_length=100, unique=True)
     Specialization = models.CharField(max_length=200, blank=False)
     Image          = models.ImageField(upload_to='doctors', blank=True, null=True)
+
+    def __str__(self):
+        return self.Name
 
 
 class Service(models.Model):
@@ -37,9 +43,20 @@ class Service(models.Model):
     day = models.CharField(max_length=2, choices=DayChoices, null=True)
     Doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True, blank=True)
 
+    @property
+    def get_name(self):
+        return self.Clinic.Name + "--" + self.Doctor.Name + "--" + self.day
+
+    def __str__(self):
+        return self.get_name
+
+
 
 class ServiceDetails(models.Model):
     ServiceID = models.ForeignKey(Service, on_delete=models.CASCADE, null=True, blank=True)
     Time = models.TimeField()
     Fees = models.IntegerField()
     Visit_capacity = models.IntegerField()
+
+    def __str__(self):
+        return self.ServiceID.get_name + "--" + str(self.Time)
