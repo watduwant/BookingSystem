@@ -3,7 +3,6 @@
 *.pot
 *.pyc
 __pycache__
-db.sqlite3
 media
 steps.txt
 test.text
@@ -81,7 +80,6 @@ celerybeat-schedule.*
 # Environments  
 ENV/ 
 env.bak/ 
-venv.bak/ 
 
 # mkdocs documentation 
 /site 
