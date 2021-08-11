@@ -31,4 +31,4 @@ class Appointment(models.Model):
         return Customer.username + "--" + Service.get_name 
     
     class Meta:
-        ordering = ['Created']
+        ordering = ['date']
