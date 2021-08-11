@@ -8,7 +8,7 @@ from rest_framework.authtoken.views import Token
 class ShopSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Shop
-        fields = ['id', 'Name', 'Address', 'Status', 'Image', 'opening_time', 'closing_time']
+        fields = ['id', 'Name', 'shop_owner', 'Address', 'Status', 'Image', 'opening_time', 'closing_time']
 
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,22 +18,22 @@ class DoctorSerializer(serializers.ModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Service
-        fields = ['id', 'Clinic', 'Doctor', 'Date']
+        fields = ['id', 'Clinic', 'Doctor', 'day']
 
 class ServicedetailSerializer(serializers.ModelSerializer):
     class Meta:
         model  = ServiceDetails
-        fields = ['id', 'ServiceID', 'Time', 'Fees', 'day', 'Visit_capacity']
+        fields = ['id', 'ServiceID', 'Time', 'Fees', 'Visit_capacity']
 
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Appointment
-        fields = ['id', 'Customer', 'Service', 'PatientName', 'Age', 'Sex', 'Status', 'Rank']
+        fields = ['id', 'Customer', 'Service', 'PatientName', 'Age', 'Sex', 'Status', 'Rank','date']
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Profile
-        fields = ['id', 'user', 'phone', 'status', 'city', 'pincode']
+        fields = ['id', 'email', 'user', 'profile_pic', 'phone', 'status', 'city', 'pincode']
 
 
 class UserSerializer(serializers.ModelSerializer):

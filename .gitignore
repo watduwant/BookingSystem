@@ -10,7 +10,7 @@ bookingSystem0.mdj
 UseCaseDiagram101.jpg
 # Backup files # 
 *.bak 
-
+.venv
 # If you are using PyCharm # 
 .idea/**/workspace.xml 
 .idea/**/tasks.xml 
