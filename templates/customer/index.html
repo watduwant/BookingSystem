@@ -1,0 +1,69 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<div class="heading-container">
+  <h1 class="heading text-gray-100 text-3xl">Clinics</h1>
+</div>
+
+<div class="clinic-container">
+  {% for shop in shops %}
+
+  <div class="card max-w-md py-4 px-8 bg-black shadow-lg rounded-lg my-20">
+    <div class="flex justify-center md:justify-end -mt-14">
+      <img
+        class="
+          bg-white
+          w-20
+          h-20
+          object-cover
+          rounded-full
+          border-2 border-yellow-400
+        "
+        src="{{ shop.Image.url }}"
+      />
+    </div>
+    <div>
+      <h2 class="text-yellow-300 text-3xl font-semibold">{{ shop.Name }}</h2>
+      <p class="mt-2 text-gray-100">{{ shop.Address }}</p>
+
+      <div class="time-info">
+        <div class="time-icon">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 stroke-current text-yellow-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+        </div>
+        <div class="day-time">
+          <div class="day text-gray-100">
+            <p>MON-SAT</p>
+          </div>
+          <div class="time text-gray-100">
+            <p>10am-8pm</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-end mt-4">
+      <a
+        href="{% url 'clinic-details' shop.id %}"
+        class="text-l font-medium rounded-lg bg-yellow-300"
+      >
+        <div class="m-1">Doctor's Appointment</div>
+      </a>
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+
+{% endblock content %} <link rel="stylesheet" href={% static
+'css/customer/index.css' %}>
