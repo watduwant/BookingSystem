@@ -34,6 +34,8 @@
       .dropdown-content {
         display: none;
         right: 0;
+        list-style: none;
+        padding-left: 0;
         position: absolute;
         background-color: black;
         min-width: fit-content;
@@ -55,8 +57,8 @@
 
     <nav style="width: 100%;" class="navbar navbar-dark bg-dark">
       <div class="container-fluid">
-        <a style="width:fit-content;border:2px solid gold;border-radius:50%;" class="navbar-brand p-0 mx-auto" href="#">
-          <img src={% static 'images/logo.png' %} width=60 alt="">
+        <a style="border:2px solid gold;border-radius:50%;display:flex;justify-content:center;" class="navbar-brand p-0 mx-auto" href="#">
+          <img src={% static 'images/logo.png' %} class="img-fluid" width=60 alt="">
         </a>
         <ul class="d-flex justify-content-start me-0 mb-2 mb-lg-0">
           <li class="dropdown-pic">
