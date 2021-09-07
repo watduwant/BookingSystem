@@ -55,12 +55,12 @@
   </head>
   <body>
 
-    <nav style="width: 100%;" class="navbar navbar-dark bg-dark">
-      <div class="container-fluid">
-        <a style="border:2px solid gold;border-radius:50%;display:flex;justify-content:center;" class="navbar-brand p-0 mx-auto" href="#">
+    <nav style="width: 100%;height:5rem;" class="navbar navbar-dark bg-dark">
+      <div style="position: relative;" class="container-fluid">
+        <a style="border:2px solid gold;border-radius:50%;position:absolute;left:46%;" class="p-0" href="#">
           <img src={% static 'images/logo.png' %} class="img-fluid" width=60 alt="">
         </a>
-        <ul class="d-flex justify-content-start me-0 mb-2 mb-lg-0">
+        <ul style="position: absolute;right:3%" class="d-flex  me-0 ms-0 p-0 mb-2">
           <li class="dropdown-pic">
             <a class="dropdown-button" style="border-radius:50%;text-decoration: none;color:white;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <img src={% static 'images/customer-profile.jpg' %} style="border-radius: 50%;" width=40 alt="">

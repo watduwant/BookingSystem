@@ -23,12 +23,13 @@ class Appointment(models.Model):
     PatientName  = models.CharField(max_length=200, verbose_name='patient_name')
     Age = models.IntegerField(null=False, blank=False, verbose_name='age')
     Sex = models.CharField(max_length=10, choices=Gender_Choices, verbose_name='gender')
+    phone = models.CharField(max_length=10, unique=True)
     Status = models.CharField(max_length=10, choices=Status_Choices, verbose_name='status', null=True, blank=True)
     Rank  = models.IntegerField(default=0 , verbose_name='rank')
     date  = models.DateField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
-        return self.Customer.username + "--" + Service.get_name 
+        return self.Customer.username + "--" + self.Service.get_name 
     
     class Meta:
         ordering = ['date']

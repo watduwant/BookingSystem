@@ -3,5 +3,6 @@ from django.urls import path
 urlpatterns = [
         path('',home,name='customer-home'),
         path('account', account,name='account'),
-        path('clinic-details/<int:id>', clinic_details, name="clinic-details")
+        # path('clinic-details/<int:id>', clinic_details, name="clinic-details")
+        path('clinicalldetails', clinic_details, name="clinic-details")
         ]

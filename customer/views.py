@@ -18,14 +18,23 @@ def home(request):
 def account(request):
     return render(request,'customer/account.html')
 
+# @login_required(login_url='login')
+# def clinic_details(request, id):
+#     shops = Shop.objects.all()
+#     context={
+#         'shops': shops
+#     }
+
+#     return render(request, "customer/clinic-details.html", context)
+
 @login_required(login_url='login')
-def clinic_details(request, id):
+def clinic_details(request):
     shops = Shop.objects.all()
     context={
         'shops': shops
     }
 
-    return render(request, "customer/clinic-details.html", context)
+    return render(request, "customer/clinicalldetails.html", context)
 
 def appointment(request):
     rank_alloted = Appointment.objects.filter(status="P")

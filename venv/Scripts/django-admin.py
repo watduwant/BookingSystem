@@ -1,4 +1,4 @@
-#!c:\users\zayn\downloads\bookingsystem-master\bookingsystem-master\venv\scripts\python.exe
+#!F:\zain\webd proj\BookingSystem\venv\Scripts\python.exe
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 
