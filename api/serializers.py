@@ -8,12 +8,12 @@ from rest_framework.authtoken.views import Token
 class ShopSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Shop
-        fields = ['id', 'Name', 'shop_owner', 'Address', 'Status', 'Image', 'opening_time', 'closing_time']
+        fields = ['id', 'Name', 'shop_owner', 'Address', 'Status', 'offDay', 'Integer_image', 'Image', 'opening_time', 'closing_time']
 
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Doctor
-        fields = ['id', 'Name', 'Specialization', 'Image']
+        fields = ['id', 'Name', 'Experience', 'Specialization', 'Image']
 
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:

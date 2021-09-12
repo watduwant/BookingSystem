@@ -55,7 +55,7 @@ class LoginView(View):
             if user:
                 if user.is_active:
                     auth.login(request, user)
-                    return redirect('/customer')
+                    return redirect('customer-home')
                 
                 return render(request, 'auth_app/login.html')
             

@@ -19,12 +19,14 @@ from django.conf.urls import url
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.authtoken.views import obtain_auth_token
+from customer.views import appointment
 
 
 urlpatterns = [
+                path('appointment', appointment, name="appointment"),
                 path('', include('auth_app.urls'),name='auth'),
                 path('admin/', admin.site.urls),    
-                path('customer/',include('customer.urls'),name='customer'),
+                path('',include('customer.urls'),name='customer'),
                 path('store/',include('store.urls'),name='store'),
                 path('api/auth', obtain_auth_token,name='auth'),
                 path('api/',include('api.urls'),name='api'),

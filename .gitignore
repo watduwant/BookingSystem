@@ -8,9 +8,7 @@ steps.txt
 test.text
 bookingSystem0.mdj
 UseCaseDiagram101.jpg
-# Backup files # 
-*.bak 
-.venv
+
 # If you are using PyCharm # 
 .idea/**/workspace.xml 
 .idea/**/tasks.xml 
@@ -30,25 +28,6 @@ UseCaseDiagram101.jpg
 *.py[cod] 
 *$py.class 
 
-# Distribution / packaging 
-.Python build/ 
-develop-eggs/ 
-dist/ 
-downloads/ 
-eggs/ 
-.eggs/ 
-lib/ 
-lib64/ 
-parts/ 
-sdist/ 
-var/ 
-wheels/ 
-*.egg-info/ 
-.installed.cfg 
-*.egg 
-*.manifest 
-*.spec 
-
 # Installer logs 
 pip-log.txt 
 pip-delete-this-directory.txt 
@@ -67,19 +46,10 @@ coverage.xml
 
 # Jupyter Notebook 
 .ipynb_checkpoints 
-
-# pyenv 
-.python-version 
-
-# celery 
-celerybeat-schedule.* 
+ 
 
 # SageMath parsed files 
 *.sage.py 
-
-# Environments  
-ENV/ 
-env.bak/ 
 
 # mkdocs documentation 
 /site 
