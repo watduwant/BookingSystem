@@ -3,14 +3,17 @@ from store.models import ServiceDetails, Shop
 from django.shortcuts import render, redirect
 from .models import Appointment
 from store.models import Service, Doctor
+from datetime import datetime
 # Create your views here.
         
 
 @login_required(login_url='login')
 def home(request):
     shops = Shop.objects.all()
+    today = datetime.today().weekday()
     context={
-        'shops': shops
+        'shops': shops,
+        'today': today,
     }
     return render(request,'customer/index.html',context)
 
@@ -27,16 +30,16 @@ def account(request):
 
 def show_details(request, shop_id):
     details = Shop.objects.get(pk=shop_id)
-
+    print(datetime.today().weekday())
     data = Service.objects.filter(Clinic=details)
     # servicedetails = ServiceDetails.objects.filter(ServiceID = data)
     # data1 = Doctor.objects.all()
 
     return render(request, 'clinicalldetails.html', {'details': details, 'data': data, })
 
-def all_list(request):
-    cliniclist = Shop.objects.all()
-    return render(request, 'cliniclist.html', {'cliniclist': cliniclist})
+# def all_list(request):
+#     cliniclist = Shop.objects.all()
+#     return render(request, 'cliniclist.html', {'cliniclist': cliniclist})
 
 
 
@@ -91,9 +94,7 @@ def appointment(request):
             sex = request.POST.get("sex")
             print(sex)
             status = "P"
-            rank_alloted = Appointment.objects.filter(Status="P", Service=service).count() + Appointment.objects.filter(Status="A", Service=service).count()
             appointment = Appointment(Customer=customer, Service=service, PatientName=patient_name, Age=age, Sex=sex, Status=status, phone=phone)
-            appointment.Rank = rank_alloted + 1
             appointment.save()
         return redirect('customer-home')
     return redirect("appointment")
