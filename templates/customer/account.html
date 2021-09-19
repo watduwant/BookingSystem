@@ -129,7 +129,7 @@
         <div class="profile heading"><h2>Profile: </h2></div>
         <div class="mx-auto profile-content flexCol">
             <div class="mx-auto mt-3 mb-3 profile-image">
-                <img style="border-radius: 50%;" class="img-fluid" src={% static 'images/customer-profile.jpg' %} alt="" />
+                <img style="border-radius: 50%;" class="img-fluid" src={{profile.profile_pic.url}} alt="" />
             </div><br>
             <div class="flexRow mx-auto profile-info">
                 <div style="color:gold;text-align:right;" class="me-3 mb-3">
@@ -139,9 +139,9 @@
                     <p>password: </p>
                 </div>
                 <div style="color: white;">
-                    <p>Selena Gomez</p>
-                    <p>9876543210</p>
-                    <p>selena@gmail.com</p>
+                    <p>{{profile.user.username}}</p>
+                    <p>{{profile.phone}}</p>
+                    <p><span style="font-size: small;">{{profile.email}}</span></p>
                     <p>*****</p><br><br><br>
                 </div>
             </div>
@@ -149,76 +149,33 @@
     </div>
     <div class="flexCol booking-col mb-0">
         <div class="booking heading"><h2>Booking History: </h2></div>
-        <div class="flexRow mx-auto mb-0 booking-content">
-            <div class="flexRow booking-con">
-                <div class="pe-3 py-0 query">
-                    <p style="margin-bottom: 0.5rem;">Appointment for:</p>
-                    <p style="margin-bottom: 0.5rem;">Doctor name:</p>
-                    <p style="margin-bottom: 0.5rem;">Date:</p>
-                </div>
-                <div  class="py-0 mx-auto info">
-                    <p style="margin-bottom: 0.5rem;">Random guy</p>
-                    <p style="margin-bottom: 0.5rem;">Dr. Guy Random</p>
-                    <p style="margin-bottom: 0.5rem;">09-08-21</p>
-                </div>
-            </div>
-            <div class="flexCol shop-image">
-                <div style="width: 43%;height:43%;" class="mx-auto">
-                    <img style="border-radius:50%;" class="img-fluid" src="{% static 'images/customer-profile.jpg' %}" alt="">
-                </div>
-                <p style="font-weight:bold;" class="mx-auto mt-2 shop-name">Maya clinic</p>
-                <p style="font-size: 0.7rem;margin-top: -1rem" class="mx-auto">saltake, sector V</p>
-            </div>
-            
-        </div><hr class="m-0 p-0" >
 
+        {% for appointment in appointments %}
+            <div class="flexRow mx-auto mb-0 booking-content">
+                <div class="flexRow booking-con">
+                    <div class="pe-3 py-0 query">
+                        <p style="margin-bottom: 0.5rem;">Appointment for:</p>
+                        <p style="margin-bottom: 0.5rem;">Doctor name:</p>
+                        <p style="margin-bottom: 0.5rem;">Date:</p>
+                    </div>
+                    <div  class="py-0 mx-auto info">
+                        <p style="margin-bottom: 0.5rem;">{{ appointment.PatientName }}</p>
+                        <p style="margin-bottom: 0.5rem;">{{ appointment.Service.Doctor }}</p>
+                        <p style="margin-bottom: 0.5rem;">{{ appointment.date }}</p>
+                    </div>
+                </div>
+                <div class="flexCol shop-image">
+                    <div style="width: 50%;height:50%;" class="mx-auto">
+                        <img style="border-radius:50%;" class="img-fluid rounded-circle" src="{{appointment.Service.Clinic.Integer_image.url}}" alt="">
+                    </div>
+                    <p style="font-weight:bold;" class="mx-auto mt-2 shop-name">{{ appointment.Service.Clinic.Name }}</p>
+                    <p style="font-size: 0.7rem;margin-top: -1rem;text-align:center;" class="mx-auto">{{ appointment.Service.Clinic.Address }}</p>
+                </div>
+                
+            </div><hr class="m-0 p-0" >
+        {% endfor %}
 
-        <div class="flexRow mx-auto mb-0 booking-content">
-            <div class="flexRow booking-con">
-                <div class="pe-3 py-0 query">
-                    <p style="margin-bottom: 0.5rem;">Appointment for:</p>
-                    <p style="margin-bottom: 0.5rem;">Doctor name:</p>
-                    <p style="margin-bottom: 0.5rem;">Date:</p>
-                </div>
-                <div  class="py-0 mx-auto info">
-                    <p style="margin-bottom: 0.5rem;">Random guy</p>
-                    <p style="margin-bottom: 0.5rem;">Dr. Guy Random</p>
-                    <p style="margin-bottom: 0.5rem;">09-08-21</p>
-                </div>
-            </div>
-            <div class="flexCol shop-image">
-                <div style="width: 43%;height:43%;" class="mx-auto">
-                    <img style="border-radius:50%;" class="img-fluid" src="{% static 'images/customer-profile.jpg' %}" alt="">
-                </div>
-                <p style="font-weight:bold;" class="mx-auto mt-2 shop-name">Maya clinic</p>
-                <p style="font-size: 0.7rem;margin-top: -1rem" class="mx-auto">saltake, sector V</p>
-            </div>
-            
-        </div><hr class="m-0 p-0" >
         
-
-        <div class="flexRow mx-auto mb-0 booking-content">
-            <div class="flexRow booking-con">
-                <div class="pe-3 py-0 query">
-                    <p style="margin-bottom: 0.5rem;">Appointment for:</p>
-                    <p style="margin-bottom: 0.5rem;">Doctor name:</p>
-                    <p style="margin-bottom: 0.5rem;">Date:</p>
-                </div>
-                <div  class="py-0 mx-auto info">
-                    <p style="margin-bottom: 0.5rem;">Random guy</p>
-                    <p style="margin-bottom: 0.5rem;">Dr. Guy Random</p>
-                    <p style="margin-bottom: 0.5rem;">09-08-21</p>
-                </div>
-            </div>
-            <div class="flexCol shop-image">
-                <div style="width: 43%;height:43%;" class="mx-auto">
-                    <img style="border-radius:50%;" class="img-fluid" src="{% static 'images/customer-profile.jpg' %}" alt="">
-                </div>
-                <p style="font-weight:bold;" class="mx-auto mt-2 shop-name">Maya clinic</p>
-                <p style="font-size: 0.7rem;margin-top: -1rem" class="mx-auto">saltake, sector V</p>
-            </div>
-            
-        </div><hr class="m-0 p-0" >
 
     </div>
 </div>
