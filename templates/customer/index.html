@@ -1,69 +1,30 @@
 {% extends "base.html" %} {% load static %} {% block content %}
 
-<div class="heading-container">
-  <h1 class="heading text-gray-100 text-3xl">Clinics</h1>
-</div>
-
-<div class="clinic-container">
-  {% for shop in shops %}
-
-  <div class="card max-w-md py-4 px-8 bg-black shadow-lg rounded-lg my-20">
-    <div class="flex justify-center md:justify-end -mt-14">
-      <img
-        class="
-          bg-white
-          w-20
-          h-20
-          object-cover
-          rounded-full
-          border-2 border-yellow-400
-        "
-        src="{{ shop.Image.url }}"
-      />
-    </div>
-    <div>
-      <h2 class="text-yellow-300 text-3xl font-semibold">{{ shop.Name }}</h2>
-      <p class="mt-2 text-gray-100">{{ shop.Address }}</p>
-
-      <div class="time-info">
-        <div class="time-icon">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8 stroke-current text-yellow-300"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-        </div>
-        <div class="day-time">
-          <div class="day text-gray-100">
-            <p>MON-SAT</p>
-          </div>
-          <div class="time text-gray-100">
-            <p>10am-8pm</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="flex justify-end mt-4">
-      <a
-        href="{% url 'clinic-details' shop.id %}"
-        class="text-l font-medium rounded-lg bg-yellow-300"
-      >
-        <div class="m-1">Doctor's Appointment</div>
-      </a>
-    </div>
+<div style="width: 70%;display:flex;flex-direction:column;" class="clinic-container mt-5 mx-auto">
+  <div class="heading">
+    <h2>Clinics: </h2>
   </div>
+  <div style="display:flex;flex-wrap:wrap;" class="clinic-deck mt-2">
 
-  {% endfor %}
+    {% for shop in shops %}
+      <div style="display: flex;flex-direction:column;width:33.33%;padding:1.5rem 1rem;justify-content:center;background-color:black;" class="clinic-card">
+        <div style="width: 50%;height: 50%;" class="clinic-pic mx-auto mb-2">
+          <img style="border-radius: 50%;height: fit-content;" class="img-fluid" src={{shop.Integer_image.url}} alt="" />
+        </div>
+        <div style="color: gold;font-size:1rem;font-weight:bold" class="mx-auto mt-2">{{shop.Name}}</div>
+        <div style="display: flex;justify-content:center;align-items:center" class="clinic-info">
+          <div style="color: white;float:left;font-size: xx-small;" class="me-2">{{shop.Address|truncatewords:4}}</div>
+          {% if shop.offDay == today %}
+            <div style="background-color:red;height:85%;width:10%;border-radius:30%;"></div>
+          {% else %}
+            <div style="background-color:green;height:85%;width:10%;border-radius:30%;"></div>
+          {% endif %}
+        </div>
+        <a class="m-auto" href="show_details/{{shop.id}}"><button type="button" style="width:fit-content;height:fit-content;font-weight:bold;font-size:medium;padding:0.1rem 0.3rem;background-color:gold;border-radius:10%;" class="mx-auto mt-2">Doctor's Appointment</button></a>
+      </div>
+    {% endfor %}
+
+  </div><br><br><br />
 </div>
 
-{% endblock content %} <link rel="stylesheet" href={% static
-'css/customer/index.css' %}>
+{% endblock content %} 

@@ -34,6 +34,8 @@
       .dropdown-content {
         display: none;
         right: 0;
+        list-style: none;
+        padding-left: 0;
         position: absolute;
         background-color: black;
         min-width: fit-content;
@@ -49,29 +51,104 @@
       .dropdown-pic:hover .dropdown-content {
         display: block;
       }
+      .searchBox {
+        margin: auto;
+         padding-right: 35px;
+         padding-top: 32px;
+         width: 35%;
+         display: flex;
+         flex-direction: row;
+         align-items: center;
+       }
+       #button-holder img{
+        margin:4px;
+        width:20px; 
+       }
+       .input-group {
+        margin: auto;
+        
+      
+        padding: 15px;
+      }
+     
+      
+      form {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 1s;
+        width: 250px;
+        height: 50px;
+        background: white;
+        box-sizing: border-box;
+        border-radius: 25px;
+        border: 4px solid white;
+        padding: 5px;
+      }
+     
+      
+      
+      input {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 42.5px;
+        line-height: 30px;
+        outline: 0;
+        border: 0;
+        font-size: 1em;
+        border-radius: 20px;
+        padding: 0 20px;
+      }
+      
+      
+      /* form:hover {
+        width: 200px;
+        cursor: pointer;
+      } */
+      
+     form:hover .fa {
+        background: #07051a;
+        color: white;
+      }
+
+      body {
+        font-family: 'Roboto', Arial, sans-serif;
+      }
+      
     </style>
   </head>
   <body>
 
-    <nav style="width: 100%;" class="navbar navbar-dark bg-dark">
-      <div class="container-fluid">
-        <a style="width:fit-content;border:2px solid gold;border-radius:50%;" class="navbar-brand p-0 mx-auto" href="#">
-          <img src={% static 'images/logo.png' %} width=60 alt="">
+    <nav style="width: 100%;height:5rem;" class="navbar navbar-dark bg-dark">
+      <div style="position: relative;" class="container-fluid">
+        <a style="border:2px solid gold;border-radius:50%;position:absolute;left:46%;" class="p-0" href="/">
+          <img src={% static 'images/logo.png' %} class="img-fluid" width=60 alt="">
         </a>
-        <ul class="d-flex justify-content-start me-0 mb-2 mb-lg-0">
+        <ul style="position: absolute;right:3%" class="d-flex  me-0 ms-0 p-0 mb-2">
           <li class="dropdown-pic">
             <a class="dropdown-button" style="border-radius:50%;text-decoration: none;color:white;" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <img src={% static 'images/customer-profile.jpg' %} style="border-radius: 50%;" width=40 alt="">
             </a>
             <ul class="dropdown-content" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">account</a></li>
+              <li><a class="dropdown-item" href="/account">account</a></li>
               <li><a class="dropdown-item" href="#">bookings</a></li>
-              <li><a class="dropdown-item" href="#">logout</a></li>
+              <li><a class="dropdown-item" href="/logout">logout</a></li>
             </ul>
           </li>
         </ul>
       </div>
     </nav>
+    <div class="searchBox">
+      <form method="POST" action="{% url 'search_result'%}">
+        {%csrf_token%}
+        <input type="search" placeholder="search" name="searched">
+        
+        <i class="fa fa-search"></i>
+      </form>
+    </div>
     
     <div class="app">
       {% block content %} 

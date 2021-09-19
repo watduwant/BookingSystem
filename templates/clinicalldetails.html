@@ -1,0 +1,190 @@
+
+{% extends "base.html" %} {% load static %} 
+{% block content %}
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<style>
+  @media only screen and (min-width: 600px) {
+  .row{
+    justify-content: center;
+    width: 60%;
+    display: flex;
+   }
+
+  
+   
+
+ .frow{
+ 
+ width:700px;
+ justify-content: center;
+ display: flex;
+ border-radius: 7px;
+    border: 2px solid black;
+  
+ }
+  
+  /* Create two equal columns that floats next to each other */
+  .column {
+    align-content: center;
+    float: center;
+    width: 25%;
+    padding: 10px;
+    padding-left: 30px;
+    height: 100px; /* Should be removed. Only for demonstration */
+  }
+ 
+  .column1 {
+    align-content:center;
+    float: center;
+    padding: 10px;
+    
+    height: 120px; /* Should be removed. Only for demonstration */
+  }
+  
+  .left, .right {
+    width: 25%;
+  }
+  
+  .middle {
+    text-align: left;
+    width: 50%;
+  }
+  .img {
+    border-radius: 50%;
+    
+  }
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  
+  .row{
+    justify-content: center;
+    display: flex;
+   }
+.frow{
+ 
+ width:815px;
+ justify-content: center;
+ display: flex;
+ border-radius: 7px;
+    border: 2px solid black;
+  
+ }
+  
+  /* Create two equal columns that floats next to each other */
+  .column {
+    align-content: center;
+    float: center;
+    width: 25%;
+    padding: 10px;
+    padding-left: 30px;
+    height: 100px; /* Should be removed. Only for demonstration */
+  }
+ 
+  .column1 {
+    align-content:center;
+    float: center;
+    padding: 10px;
+    
+    height: 120px; /* Should be removed. Only for demonstration */
+  }
+  
+  .left, .right {
+    width: 25%;
+  }
+  
+  .middle {
+    text-align: left;
+    width: 50%;
+  }
+  .img {
+    border-radius: 50%;
+    
+  }
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+</style>
+
+
+
+
+<div   class="row mx-auto p-3" style="background:url('/static/images/clinic.jfif');background-position: center;background-repeat: no-repeat;background-size: 100% 100%; justify-content:center;" >
+  <div class="column"  >
+    <b><h2 style="color: white; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; padding-left: 70px;"><p>{{details.Name}} <br></p></h2></b>
+   
+  </div>
+  <div class="column" style="font-size: x-small; padding :22px" >
+    <i class="fa fa-clock-o fa-2x" style="color:#FFFF00;"></i>&nbsp;&nbsp;&nbsp; MON-SAT <i class="fa fa-phone fa-2x" style="color:#FFFF00;">&nbsp</i> <i class="fa fa-map-marker fa-2x" style="color:#FFFF00;"></i><br>&nbsp;&nbsp;&nbsp;{{details.opening_time}}-{{details.closing_time}}
+    <br>
+    <button type="button" style="background-color: #FFFF00; border-radius: 7px; width:120px;height:25px;" color:#000000;"> <b>Sample Collection</b></button>
+  
+  </div>
+</div>
+<br>
+
+
+
+<h2 style="padding-left: 275px; color:white; font-size:30px;">Doctors:</h2>
+
+   
+{% for d in data %}
+
+
+ 
+<div class="container" style="padding-left: 165px;">
+  <div class="frow" style="background-color:#000000;">
+      
+      
+        <div class="column1 left" >
+          <img src={% static 'images/doctor.png' %} alt="Avatar" style="width: 140px; height: 140px; " class="rounded-circle">
+          
+        </div>
+
+        <div class="column1 middle" style="color:#FFFF00;font-size:20px;padding :10px" >
+    
+          <p><b>&nbsp&nbsp {{d.Doctor}}</b></p>
+        
+        
+          <ul>
+            <li>Experience : {{d.Doctor.Experience}}</li>
+            <li>Speciality : {{d.Doctor.Specialization}}</li>
+            <li>Fees :{{d.ServiceDetail.Fees}}</li>
+          </ul>
+
+       
+       
+
+       
+    
+        </div>
+
+        <div class="column1-right" >
+            <div class="btn-holder "style="padding: 100px 5px 20px 20px;" >
+              <button type="button" style="border-radius: 40px; width:180px; height:30px"><b>Book Appointment</b></button>
+            </div>
+        </div>
+        
+  </div>
+</div>
+<br>
+
+{%endfor%}
+
+
+
+{% endblock content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
