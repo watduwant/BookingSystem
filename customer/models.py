@@ -27,7 +27,8 @@ class Appointment(models.Model):
     phone = models.CharField(max_length=10)
     Status = models.CharField(max_length=10, choices=Status_Choices, verbose_name='status', null=True, blank=True)
     Rank  = models.IntegerField(default=0 , verbose_name='rank')
-    date  = models.DateField(auto_now_add=True, null=True, blank=True)
+    date  = models.DateField(null=True, blank=True)
+    time  = models.CharField(max_length=10, default="Noon")
 
     def __str__(self):
         return self.Customer.username + "--" + self.Service.get_name 

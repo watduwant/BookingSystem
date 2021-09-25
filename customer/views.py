@@ -1,16 +1,17 @@
+from auth_app.models import Profile
 from django.contrib.auth.decorators import login_required
 from store.models import ServiceDetails, Shop
 from django.shortcuts import render, redirect
 from .models import Appointment
 from store.models import Service, Doctor
-from datetime import datetime
+import datetime
 # Create your views here.
         
 
 @login_required(login_url='login')
 def home(request):
     shops = Shop.objects.all()
-    today = datetime.today().weekday()
+    today = datetime.datetime.today().weekday()
     context={
         'shops': shops,
         'today': today,
@@ -19,27 +20,19 @@ def home(request):
 
 @login_required(login_url='login')
 def account(request):
-    return render(request,'customer/account.html')
-
-
-
-
-
+    profile = Profile.objects.get(user=request.user)
+    appointments = Appointment.objects.filter(Customer = request.user)
+    return render(request,'customer/account.html', {'profile': profile, 'appointments': appointments})
 
 
 
 def show_details(request, shop_id):
     details = Shop.objects.get(pk=shop_id)
-    print(datetime.today().weekday())
+    date = datetime.date.today() + datetime.timedelta(days=5)
+    print(date )
     data = Service.objects.filter(Clinic=details)
-    # servicedetails = ServiceDetails.objects.filter(ServiceID = data)
-    # data1 = Doctor.objects.all()
 
     return render(request, 'clinicalldetails.html', {'details': details, 'data': data, })
-
-# def all_list(request):
-#     cliniclist = Shop.objects.all()
-#     return render(request, 'cliniclist.html', {'cliniclist': cliniclist})
 
 
 
@@ -56,31 +49,6 @@ def search_result(request):
         return render(request, 'search_result.html', {})
 
 
-
-
-
-
-
-
-
-# @login_required(login_url='login')
-# def clinic_details(request, id):
-#     shops = Shop.objects.all()
-#     context={
-#         'shops': shops
-#     }
-
-#     return render(request, "customer/clinic-details.html", context)
-
-@login_required(login_url='login')
-def clinic_details(request):
-    shops = Shop.objects.all()
-    context={
-        'shops': shops
-    }
-
-    return render(request, "customer/clinicalldetails.html", context)
-
 def appointment(request):
     rank_alloted = Appointment.objects.filter(Status="P")
     if request.user.is_authenticated:
@@ -92,9 +60,13 @@ def appointment(request):
             age = request.POST.get("age")
             phone = request.POST.get("phone")
             sex = request.POST.get("sex")
-            print(sex)
+            date = request.POST.get("date").split(",")
+            # print(request.POST.get("date"))
+            datefm = datetime.date(int(date[2]), int(date[1]), int(date[0]) )
+            time = request.POST.get("time")
+            print(datefm)
             status = "P"
-            appointment = Appointment(Customer=customer, Service=service, PatientName=patient_name, Age=age, Sex=sex, Status=status, phone=phone)
+            appointment = Appointment(Customer=customer, Service=service, PatientName=patient_name, Age=age, Sex=sex, Status=status, phone=phone, date=datefm, time=time)
             appointment.save()
         return redirect('customer-home')
     return redirect("appointment")

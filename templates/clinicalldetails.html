@@ -1,9 +1,6 @@
-
 {% extends "base.html" %} {% load static %} 
 {% block content %}
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+{% load custom_tags %}
 
 <style>
   @media only screen and (min-width: 600px) {
@@ -29,19 +26,14 @@
   /* Create two equal columns that floats next to each other */
   .column {
     align-content: center;
-    float: center;
     width: 25%;
     padding: 10px;
     padding-left: 30px;
-    height: 100px; /* Should be removed. Only for demonstration */
   }
  
   .column1 {
     align-content:center;
-    float: center;
     padding: 10px;
-    
-    height: 120px; /* Should be removed. Only for demonstration */
   }
   
   .left, .right {
@@ -70,9 +62,13 @@
     justify-content: center;
     display: flex;
    }
-.frow{
+
+  
+   
+
+ .frow{
  
- width:815px;
+ width:750px;
  justify-content: center;
  display: flex;
  border-radius: 7px;
@@ -83,7 +79,6 @@
   /* Create two equal columns that floats next to each other */
   .column {
     align-content: center;
-    float: center;
     width: 25%;
     padding: 10px;
     padding-left: 30px;
@@ -92,7 +87,6 @@
  
   .column1 {
     align-content:center;
-    float: center;
     padding: 10px;
     
     height: 120px; /* Should be removed. Only for demonstration */
@@ -108,7 +102,6 @@
   }
   .img {
     border-radius: 50%;
-    
   }
   /* Clear floats after the columns */
   .row:after {
@@ -121,68 +114,126 @@
 
 
 
-<div   class="row mx-auto p-3" style="background:url('/static/images/clinic.jfif');background-position: center;background-repeat: no-repeat;background-size: 100% 100%; justify-content:center;" >
+<div   class="row mx-auto p-3" style="background:url({{details.Integer_image.url}});background-position: center;background-repeat: no-repeat;background-size: 100% 100%; justify-content:center;" >
   <div class="column"  >
     <b><h2 style="color: white; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; padding-left: 70px;"><p>{{details.Name}} <br></p></h2></b>
    
   </div>
-  <div class="column" style="font-size: x-small; padding :22px" >
-    <i class="fa fa-clock-o fa-2x" style="color:#FFFF00;"></i>&nbsp;&nbsp;&nbsp; MON-SAT <i class="fa fa-phone fa-2x" style="color:#FFFF00;">&nbsp</i> <i class="fa fa-map-marker fa-2x" style="color:#FFFF00;"></i><br>&nbsp;&nbsp;&nbsp;{{details.opening_time}}-{{details.closing_time}}
-    <br>
-    <button type="button" style="background-color: #FFFF00; border-radius: 7px; width:120px;height:25px;" color:#000000;"> <b>Sample Collection</b></button>
+  <div class="column" style="font-size: x-small;" >
+    <p><i class="fa fa-clock-o fa-2x" style="color:#FFFF00;"></i> MON-SAT <i class="fa fa-phone fa-2x" style="color:#FFFF00;">&nbsp</i> <i class="fa fa-map-marker fa-2x" style="color:#FFFF00;" aria-hidden="true"></i><br>{{details.opening_time}}-{{details.closing_time}}</p> 
+    <button type="button" style="background-color: #FFFF00;border-radius: 7px;width:120px;height:25px;color:#000000;" > <b>Sample Collection</b></button>
   
   </div>
 </div>
-<br>
 
 
 
-<h2 style="padding-left: 275px; color:white; font-size:30px;">Doctors:</h2>
-
-   
-{% for d in data %}
-
-
+<h2 style="padding-left: 335px;color:white; font-size:30px;">Doctors:</h2>
+  {% for d in data %}
  
-<div class="container" style="padding-left: 165px;">
+<div class="container" style="padding-left: 223px;">
   <div class="frow" style="background-color:#000000;">
       
       
         <div class="column1 left" >
-          <img src={% static 'images/doctor.png' %} alt="Avatar" style="width: 140px; height: 140px; " class="rounded-circle">
+          <img src={{d.Doctor.Image.url}} alt="Avatar" style="width: 140px; height: 140px; " class="rounded-circle">
           
         </div>
 
-        <div class="column1 middle" style="color:#FFFF00;font-size:20px;padding :10px" >
+        <div class="column1 middle" style="color:#FFFF00;font-size:18px;padding :18px" >
     
-          <p><b>&nbsp&nbsp {{d.Doctor}}</b></p>
-        
-        
+          <p><b>&nbsp&nbsp {{d.Doctor.Name}}</b></p>
           <ul>
             <li>Experience : {{d.Doctor.Experience}}</li>
             <li>Speciality : {{d.Doctor.Specialization}}</li>
-            <li>Fees :{{d.ServiceDetail.Fees}}</li>
+            <li>Fees : Rs. {{ d.Fees }}</li>
           </ul>
-
-       
-       
-
-       
     
         </div>
 
         <div class="column1-right" >
             <div class="btn-holder "style="padding: 100px 5px 20px 20px;" >
-              <button type="button" style="border-radius: 40px; width:180px; height:30px"><b>Book Appointment</b></button>
+            <!-- Button trigger  Appointment modal -->
+              <button type="button" style="border-radius: 40px; width:180px; height:30px;" data-bs-toggle="modal" data-bs-target="#appointmentmodal"><b>Book Appointment</b></button>
             </div>
         </div>
         
   </div>
 </div>
+
+    <!-- Appointment Modal -->
+    <div class="modal fade" id="appointmentmodal" tabindex="-1" aria-labelledby="appointmentmodal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="appointmentmodaltitle">Book an appointment here...</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="/appointment" method="post">{% csrf_token %}
+              <div class="form-group">
+                <label for="patient_name">Patient Name</label>
+                <input type="text" class="form-control" id="patient_name" name="patient_name"
+                  placeholder="Write the patient name here" required>
+              </div>
+              <div class="form-group">
+                <label for="doctor">Doctor</label>
+                <select class="form-select" id="doctor" name="doctor" aria-label="select doctor">
+                  <option value="{{d.Doctor.Name}}">{{d.Doctor.Name}}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <input type="hidden" class="form-control" id="service_pk" name="service_pk" value={{d.id}}>
+              </div>
+              <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" class="form-control" id="age" name="age" placeholder="Patient's Age"
+                  required>
+              </div>
+              <div class="form-group">
+                <label for="sex">Sex</label>
+                <select class="form-select" id="sex" name="sex" aria-label="select gender">
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                  <option value="O">Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="date">Date</label>
+                  <select class="form-select" id="date" name="date" aria-label="select date">
+                    {% for date in d.day|get_dates %}
+                      <option value="{{ date.day }},{{ date.month }},{{ date.year }}">{{ date.day }}-{{ date.month }}-{{ date.year }}</option>
+                    {% endfor %}
+                  </select>
+              </div>
+              <div class="form-group">
+                <label for="time">Time</label>
+                <select class="form-select" id="time" name="time" aria-label="select time">
+                  {% for servicedetail in d.id|get_servicedetails %}
+                    <option value="{{ servicedetail.Time }}">{{ servicedetail.Time }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone number"
+                  required>
+              </div>
+              <button type="submit" class="btn btn-primary mt-2">Submit</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
 <br>
-
-{%endfor%}
-
+{% endfor %}
 
 
 {% endblock content %}

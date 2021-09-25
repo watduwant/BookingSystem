@@ -36,23 +36,15 @@ class Doctor(models.Model):
     Experience     = models.FloatField()
     Image          = models.ImageField(upload_to='doctors', blank=True, null=True)
 
-    def __str__(self):
+    def __str__(self): 
         return self.Name
 
 
 class Service(models.Model):
-    DayChoices = (
-        ('S', 'SUNDAY'),
-        ('M', 'MONDAY'),
-        ('T', 'TUESDAY'),
-        ('W', 'WEDNESDAY'),
-        ('TH', 'THURSDAY'),
-        ('F', 'FRIDAY'),
-        ('ST', 'SATURDAY')
-    )
     Clinic = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True, blank=True)
-    day = models.CharField(max_length=2, choices=DayChoices, null=True)
+    day = models.CharField(max_length=2, choices=week_days, null=True)
     Doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True, blank=True)
+    Fees = models.IntegerField()
 
     @property
     def get_name(self):
@@ -66,7 +58,6 @@ class Service(models.Model):
 class ServiceDetails(models.Model):
     ServiceID = models.ForeignKey(Service, on_delete=models.CASCADE, null=True, blank=True)
     Time = models.TimeField()
-    Fees = models.IntegerField()
     Visit_capacity = models.IntegerField() 
 
     def __str__(self):

@@ -72,7 +72,7 @@
       }
      
       
-      form {
+      .search-form {
         position: relative;
         top: 50%;
         left: 50%;
@@ -89,7 +89,7 @@
      
       
       
-      input {
+      .search-input {
         position: absolute;
         top: 0;
         left: 0;
@@ -142,9 +142,9 @@
       </div>
     </nav>
     <div class="searchBox">
-      <form method="POST" action="{% url 'search_result'%}">
+      <form method="POST" class="search-form" action="{% url 'search_result'%}">
         {%csrf_token%}
-        <input type="search" placeholder="search" name="searched">
+        <input type="search" class="search-input" placeholder="search" name="searched">
         
         <i class="fa fa-search"></i>
       </form>
