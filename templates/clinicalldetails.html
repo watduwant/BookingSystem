@@ -154,7 +154,7 @@
         <div class="column1-right" >
             <div class="btn-holder "style="padding: 100px 5px 20px 20px;" >
             <!-- Button trigger  Appointment modal -->
-              <button type="button" style="border-radius: 40px; width:180px; height:30px;" data-bs-toggle="modal" data-bs-target="#appointmentmodal"><b>Book Appointment</b></button>
+              <button type="button" style="border-radius: 40px; width:180px; height:30px;" data-bs-toggle="modal" data-bs-target="#appointmentmodal{{d.id}}"><b>Book Appointment</b></button>
             </div>
         </div>
         
@@ -162,11 +162,11 @@
 </div>
 
     <!-- Appointment Modal -->
-    <div class="modal fade" id="appointmentmodal" tabindex="-1" aria-labelledby="appointmentmodal" aria-hidden="true">
+    <div class="modal fade" id="appointmentmodal{{d.id}}" tabindex="-1" aria-labelledby="appointmentmodal{{d.id}}"" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="appointmentmodaltitle">Book an appointment here...</h5>
+            <h5 class="modal-title" id="appointmentmodaltitle{{d.id}}"">Book an appointment here...</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -175,15 +175,6 @@
                 <label for="patient_name">Patient Name</label>
                 <input type="text" class="form-control" id="patient_name" name="patient_name"
                   placeholder="Write the patient name here" required>
-              </div>
-              <div class="form-group">
-                <label for="doctor">Doctor</label>
-                <select class="form-select" id="doctor" name="doctor" aria-label="select doctor">
-                  <option value="{{d.Doctor.Name}}">{{d.Doctor.Name}}</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <input type="hidden" class="form-control" id="service_pk" name="service_pk" value={{d.id}}>
               </div>
               <div class="form-group">
                 <label for="age">Age</label>
@@ -197,6 +188,20 @@
                   <option value="F">Female</option>
                   <option value="O">Other</option>
                 </select>
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone number"
+                  required>
+              </div>
+              <div class="form-group">
+                <label for="doctor">Doctor</label>
+                <select class="form-select" id="doctor" name="doctor" aria-label="select doctor">
+                  <option value="{{d.Doctor.Name}}">{{d.Doctor.Name}}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <input type="hidden" class="form-control" id="service_pk" name="service_pk" value={{d.id}}>
               </div>
               <div class="form-group">
                 <label for="date">Date</label>
@@ -213,11 +218,6 @@
                     <option value="{{ servicedetail.Time }}">{{ servicedetail.Time }}</option>
                   {% endfor %}
                 </select>
-              </div>
-              <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Phone number"
-                  required>
               </div>
               <button type="submit" class="btn btn-primary mt-2">Submit</button>
             </form>
