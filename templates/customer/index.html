@@ -17,10 +17,7 @@
    flex-direction: row;
    align-items: center;
  }
- #button-holder img{
-  margin:0.25rem;
-  width:2rem; 
- }
+ 
  .input-group {
   margin: auto;
   
@@ -29,7 +26,7 @@
 }
 
 
-.searchform {
+form {
   position: relative;
   top: 50%;
   left: 50%;
@@ -46,10 +43,11 @@
 
 
 
-.searchinput {
+input {
   position: absolute;
   top: 0;
   left: 0;
+  right:5;
   width: 100%;
   height: 2.65rem;
   line-height: 30px;
@@ -66,24 +64,31 @@
   cursor: pointer;
 } */
 
-form:hover .fa {
-  background: #07051a;
-  color: white;
-}
+
 
 body {
   font-family: 'Roboto', Arial, sans-serif;
 }
 
+.hide {
+  display: none;
+}
+    
+.me-2:hover + .hide {
+  display:block;
+  color:white;
+}
 </style>
+
 <div class="searchBox">
-  <form class="searchform" method="POST" action="{% url 'customer-home'%}">
+  <form method="POST" action="{% url 'customer-home'%}">
     {%csrf_token%}
-    <input class="searchinput" type="search" placeholder="search" name="searched" ><i class="fa fa-search"></i>
+    <input type="search" placeholder="search" name="searched" <i class="fa fa-search"></i>>
     
    
   </form>
 </div>
+
 <div style="width: 70%;display:flex;flex-direction:column;" class="clinic-container mt-5 mx-auto">
   <div class="heading" style="padding-left: 3.9rem;">
     <h2>Clinics: </h2>
@@ -113,26 +118,8 @@ body {
         <a class="m-auto" href="show_details/{{search.id}}"><button type="button" style="width:fit-content;height:fit-content;font-weight:bold;font-size:medium;padding:0.1rem 0.3rem;background-color:gold;border-radius:10%;" class="mx-auto mt-2">Doctor's Appointment</button></a>
       </div>
     {% endfor %}
-
-    {% for search in searches %}
+     
    
-    <div style="display: flex;flex-direction:column;width:19rem;padding:1.5rem 1rem;justify-content:center;background-color:black;" class="clinic-card">
-      <div style="width:10rem;height: 9rem" class="clinic-pic mx-auto mb-2">
-        <img style="border-radius: 50%; width: 11rem; height: 9.0rem; " class="rounded-circle" class="img-fluid" src={{search.Image.url}} alt="" />
-      </div>
-    
-      <div style="color: gold;font-size:1rem;font-weight:bold;padding-top:0.15rem" class="mx-auto mt-2">{{search.Name}}</a></div>
-      <div style="display: flex;justify-content:center;align-items:center" class="clinic-info">
-        <div style="color: white;float:left;font-size:1rem;padding-left:1.9rem" class="me-2">{{search.Specialization}}</div>
-        {% if search.offDay == today %}
-          <div style="background-color:red;height:85%;width:10%;border-radius:30%;"></div>
-        {% else %}
-          <div style="background-color:green;height:85%;width:10%;border-radius:30%;"></div>
-        {% endif %}
-      </div>
-      <a class="m-auto" href="show_details/{{search.id}}"><button type="button" style="width:fit-content;height:fit-content;font-weight:bold;font-size:medium;background-color:gold;border-radius:10%;" class="mx-auto mt-2">Doctor's Appointment</button></a>
-    </div>
-  {% endfor %}
     
    
 </div>
@@ -149,6 +136,7 @@ body {
       <div style="color: gold;font-size:1rem;font-weight:bold " class="mx-auto mt-2"><a href="{% url 'show_details' shop.id %}">{{shop.Name}}</a></div>
       <div style="display: flex;justify-content:center;align-items:center" class="clinic-info">
         <div style="color: white;float:left;font-size:x-small;" class="me-2">{{shop.Address|truncatewords:4}}</div>
+        <div style="color: white;float:left;font-size:x-small;" class="hide">{{shop.Address}}</div>
         {% if search.offDay == today %}
           <div style="background-color:red;height:85%;width:10%;border-radius:30%;"></div>
         {% else %}
@@ -162,4 +150,6 @@ body {
   {%endif%}
 </div>
 </div>
+
+
 {% endblock content %} 

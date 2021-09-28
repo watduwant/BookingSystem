@@ -85,7 +85,7 @@ def appointment(request):
             return redirect(f'../show_details/{shop_id}')
         messages.ERROR(request, "Fill the appointment form correctly.")
         return redirect("customer-home")
-    messages.ERROR(request, "Fill the appointment form correctly.")
+    messages.ERROR(request, "You must login to book an appointment.")
     return redirect("customer-home")
 
 

@@ -24,5 +24,4 @@ def get_dates(day):
     dates[0] = datetime.date.today() + datetime.timedelta(days=diff)
     dates[1] = dates[0] + datetime.timedelta(days=7)
     dates[2] = dates[1] + datetime.timedelta(days=7)
-    print(dates[0])
     return dates
