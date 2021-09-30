@@ -257,7 +257,7 @@
                 <label for="time">Time</label>
                 <select class="form-select" id="time" name="time" aria-label="select time">
                   {% for servicedetail in d.id|get_servicedetails %}
-                    <option value="{{ servicedetail.Time }}">{{ servicedetail.Time }}</option>
+                    <option value="{{ servicedetail.Time }},{{ servicedetail.Time|time:'H:i:s' }}">{{ servicedetail.Time }}</option>
                   {% endfor %}
                 </select>
               </div>

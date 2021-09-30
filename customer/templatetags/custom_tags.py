@@ -1,5 +1,6 @@
 from django import template
 from store.models import ServiceDetails
+from customer.models import Appointment
 import datetime
 
 register = template.Library()
@@ -9,7 +10,13 @@ def get_servicedetails(service):
     servicedet = ServiceDetails.objects.filter(ServiceID=service)
     return servicedet
 
+# @register.filter(name='checktime')
+# def checktime(service, time):
+#     Appointment.objects.filter(Status="P", Service=service, date=service.date, time=time).count() + Appointment.objects.filter(Status="A", Service=service, date=date, time=time).count()
+#     servicedet = ServiceDetails.objects.filter(ServiceID=service)
+#     return servicedet
 
+ 
 @register.filter(name='get_dates')
 def get_dates(day):
     day = int(day)

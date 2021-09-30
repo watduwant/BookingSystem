@@ -21,7 +21,8 @@ def home(request):
         searches = Doctor.objects.filter(Name__icontains=searched)
         search = Shop.objects.filter(Name__icontains=searched)
 
-        return render(request, 'customer/index.html',  {'shops': shops, 'today': today, 'searched': searched, 'searches': searches, 'search': search, })
+        return render(request, 'customer/index.html',  
+        {'shops': shops, 'today': today, 'searched': searched, 'searches': searches, 'search': search, })
 
     else:
         return render(request, 'customer/index.html', {'shops': shops, 'today': today})
@@ -77,15 +78,26 @@ def appointment(request):
             sex = request.POST.get("sex")
             date = request.POST.get("date").split(",")
             datefm = datetime.date(int(date[2]), int(date[1]), int(date[0]) )
-            time = request.POST.get("time")
+            timelist = request.POST.get("time").split(",")
+            time = timelist[0]
+            time2 = timelist[1]
             status = "P"
-            appointment = Appointment(Customer=customer, Service=service, PatientName=patient_name, Age=age, Sex=sex, Status=status, phone=phone, date=datefm, time=time)
+            time2 = datetime.datetime.strptime(time2, '%H:%M:%S').time()
+            slots = ServiceDetails.objects.get(ServiceID=service_pk, Time=time2).Visit_capacity
+            Nslots = Appointment.objects.filter(Status="P", Service=service, date=datefm, time=time).count() + Appointment.objects.filter(Status="A", Service=service, date=datefm, time=time).count()
+
+            if(Nslots+1>slots):
+                messages.error(request, "No slots are available on that date. Please choose a different date!!")
+                return redirect(f'../show_details/{shop_id}')
+
+            appointment = Appointment(Customer=customer, Service=service, PatientName=patient_name, 
+            Age=age, Sex=sex, Status=status, phone=phone, date=datefm, time=time)
             appointment.save()
             messages.success(request, "Your request has been received and we'll notify you shortly about the confirmation.")
             return redirect(f'../show_details/{shop_id}')
-        messages.ERROR(request, "Fill the appointment form correctly.")
+        messages.error(request, "Fill the appointment form correctly.")
         return redirect("customer-home")
-    messages.ERROR(request, "You must login to book an appointment.")
+    messages.error(request, "You must login to book an appointment.")
     return redirect("customer-home")
 
 
