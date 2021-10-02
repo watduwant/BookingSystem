@@ -36,7 +36,10 @@ class Appointment(models.Model):
     def rank_generated(instance, sender, *args, **kwargs):
         appointment = instance
         service = appointment.Service
-        rank_alloted = Appointment.objects.filter(Status="P", Service=service).count() + Appointment.objects.filter(Status="A", Service=service).count()
+        date = appointment.date
+        time = appointment.time
+        rank_alloted = Appointment.objects.filter(Status="P", Service=service, date=date, time=time).count() + Appointment.objects.filter(Status="A", Service=service, date=date, time=time).count()
+        print(rank_alloted)
         Appointment.objects.filter(id=appointment.id).update(Rank = rank_alloted)
     
     class Meta:
