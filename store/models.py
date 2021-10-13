@@ -26,6 +26,7 @@ class Shop(models.Model):
     Image         = models.ImageField(upload_to='shops', blank=True, null=True)
     opening_time  = models.TimeField(null=True, blank=True)
     closing_time  = models.TimeField(null=True, blank=True)
+    shop_url      = models.URLField(max_length=200, default='www.watduwant.com')
 
     def __str__(self):
         return self.Name
@@ -33,7 +34,7 @@ class Shop(models.Model):
 class Doctor(models.Model):
     Name           = models.CharField(max_length=100, unique=True)
     Specialization = models.CharField(max_length=200, blank=False)
-    Experience     = models.FloatField()
+    Experience     = models.IntegerField()
     Image          = models.ImageField(upload_to='doctors', blank=True, null=True)
 
     def __str__(self): 
@@ -46,9 +47,12 @@ class Service(models.Model):
     Doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True, blank=True)
     Fees = models.IntegerField()
 
+    class Meta:
+        unique_together = (('Clinic', 'day','Doctor'),)
+
     @property
     def get_name(self):
-        return self.Clinic.Name + "--" + self.Doctor.Name + "--" + self.day
+        return self.Clinic.Name + "--" + self.Doctor.Name + "--" + str(week_days[int(self.day)+1][1])
 
     def __str__(self):
         return self.get_name
@@ -59,6 +63,8 @@ class ServiceDetails(models.Model):
     ServiceID = models.ForeignKey(Service, on_delete=models.CASCADE, null=True, blank=True)
     Time = models.TimeField()
     Visit_capacity = models.IntegerField() 
+    class Meta:
+        unique_together = (('ServiceID', 'Time'),)
 
     def __str__(self):
         return self.ServiceID.get_name + "--" + str(self.Time)
