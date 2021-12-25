@@ -3,7 +3,7 @@
 <div>
       <form action={% url 'login' %} method="post">
       {% csrf_token %}
-        <div class="bg-grey min-h-screen flex flex-col">
+        <div class="bg-grey min-h-screen flex">
           <div
             class="
               container
@@ -49,6 +49,18 @@
                 Log in
               </button>
 
+              <div class="col s12 m6 offset-m3 center-align">
+                <a class="oauth-container btn darken-4 white black-text mx-auto" style="display: flex;justify-content: center;align-items: center;" href="/accounts/google/login/?process=login" style="text-transform:none">
+                    <div class="left">
+                        <img width="20px" style="margin-top:7px; margin-right:8px" alt="Google sign-in" 
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png" />
+                    </div>
+                    Login with Google
+                </a>
+              </div>
+
+              
+
               <div class="text-center text-sm text-grey-dark mt-4">
                 By signing up, you agree to the
                 <a
@@ -67,6 +79,7 @@
               </div>
             </div>
 
+
             <div class="text-grey-dark mt-6">
               Didn't have an account?
               <a
@@ -74,7 +87,7 @@
                 href="../signup"
               >
                 Sign up </a
-              >.
+              >
             </div>
           </div>
         </div>

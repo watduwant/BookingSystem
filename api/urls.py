@@ -1,14 +1,15 @@
 from django.urls import path,include
 from rest_framework.routers import DefaultRouter
-from .views import ShopViewSet, UserViewSet, ProfileViewSet, DoctorViewSet, ServicedetailViewSet, ServiceViewSet, AppointmentViewSet
+from .views import ShopViewSet, UserViewSet, DoctorViewSet, ServiceViewSet, ServicedetailDayViewSet,ServicedetailDayTimeViewSet, AppointmentViewSet
 
 router = DefaultRouter()
 router.register('shops', ShopViewSet, basename='shops')
-router.register('profiles', ProfileViewSet, basename='profiles')
+# router.register('profiles', ProfileViewSet, basename='profiles')
 router.register('users', UserViewSet, basename='users')
 router.register('doctors', DoctorViewSet, basename='doctors')
 router.register('services', ServiceViewSet, basename='services')
-router.register('servicedetails', ServicedetailViewSet, basename='servicedetails')
+router.register('servicedetailsday', ServicedetailDayViewSet, basename='servicedetailsday')
+router.register('servicedetailsdaytime', ServicedetailDayTimeViewSet, basename='servicedetailsdaytime')
 router.register('appointments', AppointmentViewSet, basename='appointment')
 
 

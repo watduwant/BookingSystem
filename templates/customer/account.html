@@ -22,12 +22,26 @@
     }
     .profile-content{
         font-size: large;
+        box-sizing: border-box;
+        padding: 1rem 3rem 1rem;
         font-weight: 500;
         background-color:black;
     }
     .profile-image{
-        width: 55%;
-        height: 55%;
+        width: 150px;
+        height: 150px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 50%;
+    }
+    .dp-pic{
+        display: inline;
+        margin: 0 auto;
+        /* margin-left: -25%; */
+        background-size:contain;
+        background-position:center;
+        height: auto;
+        width: auto;
     }
     .profile-col{
         width: 30%;
@@ -87,10 +101,10 @@
         .profile-content{
             font-size: medium;
         }
-        .profile-image{
+        /* .profile-image{
             width: 40%;
             height: 40%;
-        }
+        } */
         .shop-name{
             font-size: 0.8rem;
         }
@@ -129,7 +143,7 @@
         <div class="profile heading"><h2>Profile: </h2></div>
         <div class="mx-auto profile-content flexCol">
             <div class="mx-auto mt-3 mb-3 profile-image">
-                <img style="border-radius: 50%;" class="img-fluid" src={{profile.profile_pic.url}} alt="" />
+                <img class="dp-pic img-fluid" src={{profile.profile_pic.url}} alt="" />
             </div><br>
             <div class="flexRow mx-auto profile-info">
                 <div style="color:gold;text-align:right;" class="me-3 mb-3">
@@ -139,10 +153,10 @@
                     <p>password: </p>
                 </div>
                 <div style="color: white;">
-                    <p>{{profile.user.username}}</p>
-                    <p>{{profile.phone}}</p>
+                    <p>{{request.user.get_full_name}}</p>
+                    <p>{{profile.mobile}}</p>
                     <p><span style="font-size: small;">{{profile.email}}</span></p>
-                    <p>*****</p><br><br><br>
+                    <p>*****</p>
                 </div>
             </div>
         </div>

@@ -28,7 +28,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-SITE_ID = 1
+SITE_ID = 2
+LOGIN_REDIRECT_URL = "/"
 
 # Application definition
 
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'dj_rest_auth',
     'corsheaders',
+    'allauth.socialaccount.providers.google',
 
     #local apps
     'api',
@@ -58,6 +60,25 @@ INSTALLED_APPS = [
 
     
 ]
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '539609373036-aucng4mt95c0d2gu693r3m8ebqi0fhl3.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    }
+}
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -103,6 +124,12 @@ TEMPLATES = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
@@ -116,6 +143,8 @@ DATABASES = {
     }
 }
 
+
+AUTH_USER_MODEL = 'auth_app.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -155,6 +184,8 @@ import os
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static',]
+STATIC_ROOT = os.path.join(BASE_DIR,'static_root')
+
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'

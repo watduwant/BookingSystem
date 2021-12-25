@@ -124,13 +124,13 @@ body {
    
 </div>
   <div style="display:flex;flex-wrap:wrap;" class="clinic-deck mt-2">
-  {%else%}
-  {%for shop in shops%}
+  {% else %}
+  {% for shop in shops %}
 
    
     <div style="display: flex;flex-direction:column;width:18.5rem;padding:1.5rem 1rem;justify-content:center;background-color:black;" class="clinic-card">
       <div style="width: 10rem;height: 9rem;" class="clinic-pic mx-auto mb-2">
-        <img style="border-radius: 50%; width: 11rem; height: 9.0rem;" class="rounded-circle" src={{shop.Integer_image.url}} alt="" />
+        <img style="border-radius: 50%; width: 11rem; height: 9.0rem;" class="rounded-circle" src={{shop.Image.url}} alt="avatar" />
       </div>
     
       <div style="color: gold;font-size:1rem;font-weight:bold " class="mx-auto mt-2"><a href="{% url 'show_details' shop.id %}">{{shop.Name}}</a></div>

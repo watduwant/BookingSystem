@@ -1,14 +1,13 @@
-from store.models import Shop, Doctor, Service, ServiceDetails
+from store.models import Shop, Doctor, Service, ServiceDetailsDay,ServiceDetailsDayTime
 from customer.models import Appointment
-from auth_app.models import Profile
+from auth_app.models import User
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from rest_framework.authtoken.views import Token
 
 class ShopSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Shop
-        fields = ['id', 'Name', 'shop_owner', 'Address', 'Status', 'offDay', 'Integer_image', 'Image', 'opening_time', 'closing_time','shop_url']
+        fields = ['id', 'Name', 'Shop_owner', 'Address', 'Status', 'OffDay', 'Interior_image', 'Image', 'Opening_time', 'Closing_time','Shop_url']
 
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,28 +18,33 @@ class DoctorSerializer(serializers.ModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Service
-        fields = ['id', 'Clinic', 'Doctor', 'day', 'Fees']
+        fields = ['id', 'Clinic', 'Doctor',  'Fees']
 
-class ServicedetailSerializer(serializers.ModelSerializer):
+class ServicedetailDaySerializer(serializers.ModelSerializer):
     class Meta:
-        model  = ServiceDetails
-        fields = ['id', 'ServiceID', 'Time', 'Visit_capacity']
+        model  = ServiceDetailsDay
+        fields = ['id', 'ServiceID', 'Day']
+
+class ServicedetailDayTimeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = ServiceDetailsDayTime
+        fields = ['id', 'ServiceDetailsDayID', 'Time','Visit_capacity']
 
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Appointment
-        fields = ['id', 'Customer', 'Service', 'PatientName', 'Age', 'Sex', 'phone', 'Status', 'Rank','date', 'time']
+        fields = ['id', 'Customer', 'Service', 'PatientName', 'Age', 'Sex', 'phone', 'Status', 'Rank','day', 'time']
 
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model  = Profile
-        fields = ['id', 'email', 'user', 'profile_pic', 'phone', 'status', 'city', 'pincode']
+# class ProfileSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model  = Profile
+#         fields = ['id', 'email', 'user', 'profile_pic', 'phone', 'status', 'city', 'pincode']
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'password']
+        fields = ['id', 'email', 'password', 'profile_pic', 'mobile', 'status', 'city', 'pincode']
 
         extra_kwargs = {'password':{'write_only':True, 'required':True}}
 
