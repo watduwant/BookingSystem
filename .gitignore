@@ -3,7 +3,6 @@
 *.pot
 *.pyc
 __pycache__
-media
 steps.txt
 test.text
 bookingSystem0.mdj
