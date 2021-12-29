@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from . models import User
+from django.contrib import messages
 from django.contrib import auth
 
 
@@ -54,12 +55,13 @@ class LoginView(View):
             if user:
                 if user.is_active:
                     auth.login(request, user)
+                    messages.success(request, "You have successfully logged in.")
                     return redirect('customer-home')
-                
+                messages.error(request, "You are not active user.")
                 return render(request, 'auth_app/login.html')
-            
+            messages.error(request, "Enter correct email and password.")
             return render(request, 'auth_app/login.html')
-        
+        messages.error(request, "Enter correct email and password.")
         return render(request, 'auth_app/login.html')
     
                     

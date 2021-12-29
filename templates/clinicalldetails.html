@@ -7,160 +7,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-<style>
-  html {
-    font-size: 93.75%;
-  }
 
-  .row {
-    justify-content: center;
-    align-items: center;
+{% comment %} <div class="full-height" style="height: 100%; background-color:white;"> {% endcomment %}
 
-    padding-top: 1.5rem;
-
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .row2 {
-
-    padding-top: 1.2rem;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding-left: 7rem;
-  }
-
-  .container {
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    padding-top: 0.1rem;
-    width: auto;
-    height: auto;
-  }
-
-  .frow {
-
-
-
-    justify-content: center;
-    display: flex;
-    flex-wrap: nowrap;
-
-    padding-top: 0.5rem;
-
-    border-radius: 0.5rem;
-    border: 2px solid black;
-
-  }
-
-  .column-holder {
-    justify-content: center;
-    display: flex;
-
-
-  }
-
-  .supsub {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    vertical-align: middle;
-    font-size: 20%;
-  }
-
-  /* Create two equal columns that floats next to each other */
-
-
-  .column1 {
-
-    align-content: center;
-    float: center;
-    padding: 0.6rem;
-
-    height: 8rem;
-    /* Should be removed. Only for demonstration */
-  }
-
-  .left {
-    width: 11rem;
-  }
-
-  .right {
-    width: 11rem;
-  }
-
-  .middle {
-    text-align: left;
-    width: 32rem;
-    padding-left: 1rem;
-  }
-
-  .img {
-    border-radius: 4rem;
-
-  }
-
-  /* Clear floats after the columns */
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-
-
-
-  @media only screen and (max-width: 1200px) {
-    html {
-      font-size: 82.35%;
-    }
-  }
-
-  @media only screen and (max-width: 1024px) {
-    html {
-      font-size: 70.27%;
-    }
-  }
-
-  @media only screen and (max-width: 750px) {
-    html {
-      font-size: 37.50%;
-
-    }
-
-
-  }
-
-  @media only screen and (max-width: 650) {
-    html {
-      font-size: 24%;
-    }
-  }
-
-  @media only screen and (max-width: 550) {
-    html {
-      font-size: 18%;
-    }
-  }
-
-  @media only screen and (max-width: 360) {
-    html {
-      font-size: 13%;
-    }
-  }
-
-  @media only screen and (max-width: 280) {
-    html {
-      font-size: 1.5%;
-    }
-
-  }
-</style>
-
-<div class="full-height" style="height: 100%; background-color:white;">
-
-  <div class="row mx-auto"
+  <!-- <div class="row mx-auto"
     style=" width: 54.5rem;background:url({{details.Interior_image.url}});background-position: center;background-repeat: no-repeat;background-size: 100% 100%; justify-content:center;display:flex">
     <div class="row2">
       <b>
@@ -186,18 +36,47 @@
         style="font-size:2.4rem"></i>
     </div>
 
-  </div>
+  </div> -->
+
+
+  <nav class="navbar navbar-default " id="navbar-style">
+    <div id="header" style="background: url({{details.Interior_image.url}})" class="container">
+        <div id="logo" style="background-image: url({% static 'images/logo.jpg' %})"></div>
+        <div class="navbar-header">
+            <h1 class="head1">{{details.Name}}</h1>
+            <!-- <h1 class="head1">House</h1> -->
+        </div>
+    </div>
+    <div class='container'>
+        <div class="row" id="brand-style">
+            <div class="col-12">
+                <div id="brand">
+                    <div class="social-icons">
+                        <a href="#" class="heading">
+                            <h1>Doctors:</h1>
+                        </a>
+                        <div class="icon-arrag">
+                            <a href="#" class="icon"><i class="fa fa-map-marker"></i></a>
+                            <a href="#" class="icon"><i class="fa fa-phone"></i> </a>
+                            <a href="#" class="icon"><i class="fa fa-clock-o"></i>
+                                <p class='day-index'>Mon-sat<br>{{details.Opening_time}}-{{details.Closing_time}}</p>
+                                <!-- <p class='day-index'></p> -->
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </nav>
 
 
 
 
 
+  
 
-
-
-  {% for d in data %}
-
-  <div class="container">
+  {% comment %} <div class="container">
     <div class="frow mx-auto p-3" style=" width: 54.5rem;background-color:#000000;">
 
 
@@ -229,7 +108,109 @@
       </div>
 
     </div>
-  </div>
+  </div> {% endcomment %}
+
+
+
+
+
+
+
+
+  <section id="services">
+    <div class="container">
+        <div class="row">
+          {% for d in data %}
+            <div class="col-12 mt-3">
+                <div class="card">
+                    <div class="card-horizontal">
+                        <div class="img-square-wrapper">
+                            <img class="img" src={{d.Doctor.Image.url}} alt="Card image cap">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{d.Doctor.Name}}</h4>
+                            <ul class="card-text">
+                                <li>Experrience:{{d.Doctor.Experience}}</li>
+                                <li>speciality :{{d.Doctor.Specialization}}</li>
+                                <!-- <button>+Book</button> -->
+                                <!-- Trigger the modal with a button -->
+                                <button type="button" class="btn btn-light btn-lg" data-toggle="modal"
+                                    data-target="#myModal">+Book</button>
+                                <li>Fees:&#x20b9 {{d.Fees}}</li>
+                            </ul>
+
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal" role="dialog">
+                                <div class="modal-dialog">
+
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Book Your Slot</h4>
+                                            <button type="button" class="close"
+                                                data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/appointment" method="post">{% csrf_token %}
+                                              <label>Doctor Name:</label>
+                                              <select name="doctor" id="doctor">
+                                                <option value="{{d.Doctor.Name}}">{{d.Doctor.Name}}</option>
+                                              </select><br />
+                                              <label for="days">Day:</label>
+                                              <select name="days" id="day">
+                                                  {% for servicedetail in d.id|get_servicedetails %}
+                                                    <option value="{{ servicedetail.Day}}">{{ servicedetail.Day}}</option>
+                                                  {% endfor %}
+                                              </select> <br />
+                                              <label for="Time">Time:</label>
+                                              <select name="Time" id="Time">
+                                                {% for servicedetailDayTime in d.id|get_servicedetails1 %}
+                                                  <option value="{{ servicedetailDayTime.Time}},{{ servicedetailDayTime.Time|time:'H:i:s' }}">{{servicedetailDayTime.Time}}</option>
+                                                {% endfor %}
+                                              </select>
+                                              <input type="hidden" class="form-control" id="service_pk" name="service_pk" value={{d.id}}>
+
+                                              <br />
+
+                                              <label for"patient_name">Patient Name:</label>
+                                              <input id="patient_name" name="patient_name" type="text"><br>
+                                              <label for="sex"> Sex</label>
+                                              <select name="sex" id="sex">
+                                                  <option value="none" selected>Sex</option>
+                                                  <option value="M">Male</option>
+                                                  <option value="F">Female</option>
+                                                  <option value="O">other</option>
+                                              </select><br>
+                                              <label for="age">Age:</label>
+                                              <input id="age" name="age" type="number"><br>
+                                              <label for="phone">Contact No:</label>
+                                              <input id="phone" name="phone" type="tel"><br>
+                                              {% comment %} <label for="email">Email</label>
+                                              <input type="email"> {% endcomment %}
+                                              <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                                            <form>
+                                            {% comment %} <button type="button" class="otp">Send OTP</button> {% endcomment %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+    </div>
+  </section>
+
+
+
 
 
 
@@ -237,7 +218,7 @@
 
 
   <!-- Appointment Modal -->
-  <div class="modal fade" id="appointmentmodal{{d.id}}" tabindex="-1" aria-labelledby="appointmentmodal{{d.id}}" aria-hidden="true">
+  {% comment %} <div class="modal fade" id="appointmentmodal{{d.id}}" tabindex="-1" aria-labelledby="appointmentmodal{{d.id}}" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -303,9 +284,9 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> {% endcomment %}
 
-  {% endfor %}
+  
 
   <br>
 </div>

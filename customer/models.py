@@ -25,7 +25,7 @@ class Appointment(models.Model):
     Age = models.IntegerField(null=False, blank=False, verbose_name='age')
     Sex = models.CharField(max_length=10, choices=Gender_Choices, verbose_name='gender')
     phone = models.CharField(max_length=10)
-    Status = models.CharField(max_length=10, choices=Status_Choices, verbose_name='status', null=True, blank=True)
+    Status = models.CharField(max_length=10, choices=Status_Choices, verbose_name='status', default='P')
     Rank  = models.IntegerField(default=0 , verbose_name='rank')
     # date  = models.DateField(null=True, blank=True)
     day = models.CharField(max_length=50)

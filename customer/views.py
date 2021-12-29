@@ -7,7 +7,7 @@ from django.contrib import messages
 import datetime
 # Create your views here.
 
-
+ 
 def home(request):
     shops = Shop.objects.all()
     today = datetime.datetime.today().weekday()
