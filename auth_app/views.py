@@ -3,6 +3,7 @@ from django.views import View
 from . models import User
 from django.contrib import messages
 from django.contrib import auth
+from auth_app.sendMsg import sendmsg
 
 
 # Create your views here.
@@ -14,23 +15,26 @@ class SignUpView(View):
         return render(request, 'auth_app/sign-up.html')
 
     def post(self, request):
-        first_name = request.POST['first_name']
-        last_name = request.POST['last_name']
-        email = request.POST['email']
-        password = request.POST['password']
-        confirm_password = request.POST['confirm_password']
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        mobile = request.POST.get('phone')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
 
         context = {
             'fieldValues': request.POST
         }
 
-        if not User.objects.filter(username=email).exists():
+        if not User.objects.filter(email=email).exists():
             if password == confirm_password:
-                user = User.objects.create_user(username=email, email=email,  first_name=first_name, last_name=last_name)
+                user = User.objects.create_user(email=email, first_name=first_name, mobile=str(mobile), last_name=last_name)
                 user.set_password(password)
                 user.is_active=True
                 user.save()
-                return render(request, 'auth_app/login.html', context)
+                request.session['id'] = user.id
+
+                return redirect('otp-verify')
                 
             else:
                 pass
@@ -50,7 +54,7 @@ class LoginView(View):
 
         if email and password: 
 
-            user = auth.authenticate(username=email, password=password)
+            user = auth.authenticate(email=email, password=password)
 
             if user:
                 if user.is_active:
@@ -59,7 +63,7 @@ class LoginView(View):
                     return redirect('customer-home')
                 messages.error(request, "You are not active user.")
                 return render(request, 'auth_app/login.html')
-            messages.error(request, "Enter correct email and password.")
+            messages.error(request, "Invalid user.")
             return render(request, 'auth_app/login.html')
         messages.error(request, "Enter correct email and password.")
         return render(request, 'auth_app/login.html')
@@ -69,4 +73,30 @@ class LogoutView(View):
     def get(self, request):
         auth.logout(request)
         return redirect('login')
+
+def otp_verify(request):
+    otpWritten = request.POST.get('otp')
+
+    if not request.user.is_authenticated:
+        user_id = request.session.get('id')
+    else:
+        user_id = request.user.id
+    user = User.objects.get(id=user_id)
+    
+    if not request.POST:
+        print(f'{user.get_full_name()} - {user.otp}')
+        body = f'Hello {user.get_full_name()} your otp is {user.otp}'
+        sendmsg(user.mobile, body)
+        # send sms 
+    if request.method == "POST":
+        if int(otpWritten) == int(user.otp):
+            user.is_PhoneVerified = True
+            user.save()
+            messages.success(request, "Phone number Verified.")
+            return redirect('customer-home')
+        messages.error(request, "not valid.")
+        return redirect('otp-verify')
+
+    return render(request, 'auth_app/otp_check.html')
+
 

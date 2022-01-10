@@ -6,12 +6,11 @@ from .models import Appointment
 from django.contrib import messages
 import datetime
 # Create your views here.
-
+import os
  
 def home(request):
     shops = Shop.objects.all()
     today = datetime.datetime.today().weekday()
-
     if request.method == "POST":
         searched = request.POST['searched']
 
@@ -46,7 +45,7 @@ def show_details(request, shop_id):
    # data1 = ServiceDetailsDayTime.objects.get(pk=ServiceDetailsDayID)
   # data1 = ServiceDetailsDayTime.objects.all().select_related("ServiceDetailsDay")
 
-    return render(request, 'clinicalldetails.html', {'details': details, 'data': data})
+    return render(request, 'clinicalldetails.html', {'details': details, 'data': data, 'n':range(2)})
 
 
 def appointment(request):

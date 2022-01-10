@@ -57,6 +57,11 @@ Param(
     $Prompt
 )
 
+$env:TWILIO_ACCOUNT_SID = 'AC5d1f23f730e11bf377eca98812628b95'
+$env:TWILIO_AUTH_TOKEN = 'bf755ac44445bf95330014a4aa2aceff'
+
+
+
 <# Function declarations --------------------------------------------------- #>
 
 <#

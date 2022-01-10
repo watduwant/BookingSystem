@@ -3,13 +3,13 @@ from auth_app.models import User
 
 # Create your models here.
 week_days = (
-    ('Sunday', 'Sunday'),
-    ('Monday', 'Monday'),
-    ('Tuesday', 'Tuesday'),
-    ('Wednesday', 'Wednesday'),
-    ('Thursday', 'Thursday'),
-    ('Friday', 'Friday'),
-    ('Saturday', 'Saturday'),
+    ('1', 'Monday'),
+    ('2', 'Tuesday'),
+    ('3', 'Wednesday'),
+    ('4', 'Thursday'),
+    ('5', 'Friday'),
+    ('6', 'Saturday'),
+    ('7', 'Sunday')
 )
 
 
@@ -25,7 +25,7 @@ class Shop(models.Model):
     Status = models.CharField(max_length=2, choices=shop_status, default='E')
     Interior_image = models.ImageField(
         upload_to='shops', blank=True, null=True)
-    OffDay = models.CharField(max_length=10, default="Sunday", choices=week_days)
+    OffDay = models.CharField(max_length=10, default="7", choices=week_days)
     Image = models.ImageField(upload_to='shops', blank=True, null=True)
     Opening_time = models.TimeField(null=True, blank=True)
     Closing_time = models.TimeField(null=True, blank=True)

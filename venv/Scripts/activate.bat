@@ -10,6 +10,8 @@ if defined _OLD_CODEPAGE (
 
 set VIRTUAL_ENV=F:\zain\webd proj\BookingSystem\venv
 
+set TWILIO_ACCOUNT_SID= 'AC7ff9240c548f8f5f6ee089a8fd355ce9'
+
 if not defined PROMPT set PROMPT=$P$G
 
 if defined _OLD_VIRTUAL_PROMPT set PROMPT=%_OLD_VIRTUAL_PROMPT%

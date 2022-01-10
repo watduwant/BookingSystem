@@ -1,10 +1,9 @@
 from django import template
 from store.models import ServiceDetailsDay, ServiceDetailsDayTime
 from customer.models import Appointment
-import datetime
+from datetime import datetime, timedelta, date
 
 register = template.Library()
-
 
 @register.filter(name='get_servicedetails')
 def get_servicedetails(service):
@@ -18,24 +17,33 @@ def get_servicedetails1(service):
         ServiceDetailsDayID=service)
     return servicedet1
 
+weekdays = {
+    '1': 'Monday',
+    '2': 'Tuesday',
+    '3': 'Wednesday',
+    '4': 'Thursday',
+    '5': 'Friday',
+    '6': 'Saturday',
+    '7': 'Sunday'
+    }
 
-@register.filter(name='get_dates')
-def get_dates(day):
-    day = int(day)
-    todaywd = datetime.datetime.today().weekday()
+
+@register.filter(name='get_date')
+def get_date(weekday, next):
+    weekday = int(weekday)
+    today = datetime.today().isoweekday()
     diff = 0
-    if(todaywd < day):
-        diff = day - todaywd
+    if(weekday > today):
+        diff = weekday - today
+    else:
+        diff = 7 + weekday - today
+    todayDate = date.today()
+    appointment_date = todayDate + timedelta(days=diff)
+    if(next == 0):
+        return weekdays[str(weekday)] + ' ' + str(appointment_date + timedelta(days=7))
+    elif(next == 1):
+        return weekdays[str(weekday)] + ' ' +  str(appointment_date + timedelta(days=14))
 
-    elif(day < todaywd):
-        diff = 7 + day - todaywd
-    dates = [1, 2, 3]
-    dates[0] = datetime.date.today() + datetime.timedelta(days=diff)
-    dates[1] = dates[0] + datetime.timedelta(days=7)
-    dates[2] = dates[1] + datetime.timedelta(days=7)
-    return dates,
-# @register.filter(name='checktime')
-# def checktime(service, time):
-#     Appointment.objects.filter(Status="P", Service=service, date=service.date, time=time).count() + Appointment.objects.filter(Status="A", Service=service, date=date, time=time).count()
-#     servicedet = ServiceDetails.objects.filter(ServiceID=service)
-#     return servicedet
+    return weekdays[str(weekday)] + ' ' + str(appointment_date)
+
+

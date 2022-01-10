@@ -10,7 +10,7 @@ Gender_Choices  = (
     ('M', 'Male'),
     ('F', 'Female'),
     ('O', 'Other'),
-)
+) 
 Status_Choices  = (
     ('P', 'Pending'),
     ('A', 'Accepted'),
