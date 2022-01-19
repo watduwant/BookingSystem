@@ -1,5 +1,9 @@
 import os
 from twilio.rest import Client
+from twilio.http.http_client import TwilioHttpClient
+
+proxy_client = TwilioHttpClient()
+proxy_client.session.proxies = {'https': os.environ.get('https_proxy')}
 
 
 # Find your Account SID and Auth Token at twilio.com/console
@@ -7,7 +11,7 @@ from twilio.rest import Client
 
 account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
 auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
-client = Client(account_sid, auth_token)
+client = Client(account_sid, auth_token, http_client=proxy_client)
 
 def sendmsg(phone, body):
     print(str(phone))

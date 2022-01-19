@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from .models import Appointment
 from django.contrib import messages
 import datetime
+import json
 # Create your views here.
 import os
  
@@ -46,6 +47,12 @@ def show_details(request, shop_id):
   # data1 = ServiceDetailsDayTime.objects.all().select_related("ServiceDetailsDay")
 
     return render(request, 'clinicalldetails.html', {'details': details, 'data': data, 'n':range(2)})
+
+def serviceTime(request):
+    dayID = request.GET.get("dayId");
+    serviceTimes = ServiceDetailsDay.objects.get(id=dayID).serviceDetailsDayTimes.all
+    # serviceTimes = serviceTimes.serviceDetailsDayTimes.all()
+    return render(request, 'serviceTimeDropdown.html', {'serviceTimes': serviceTimes})
 
 
 def appointment(request):

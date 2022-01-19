@@ -1,0 +1,6 @@
+
+
+<option value="">Select Time</option>
+{% for serviceTime in serviceTimes %}
+    <option value="{{ serviceTime.Time}},{{ serviceTime.Time|time:'H:i:s' }}">{{serviceTime.Time}}</option>
+{% endfor %} 

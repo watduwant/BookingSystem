@@ -74,26 +74,34 @@
                                                 data-dismiss="modal">&times;</button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="/appointment" method="post">{% csrf_token %}
+                                            <form action="/appointment" method="post" id="appointmentForm" data-times-url="{% url 'loadtimes' %}">{% csrf_token %}
                                               <label>Doctor Name:</label>
                                               <select name="doctor" id="doctor">
                                                 <option value="{{d.Doctor.Name}}">{{d.Doctor.Name}}</option>
                                               </select><br />
                                               <label for="days">Day:</label>
-                                              <select name="days" id="day">
-                                                  {% for servicedetail in d.id|get_servicedetails %}
-                                                    <option value="{{ servicedetail.Day|get_date:"-1" }}">{{ servicedetail.Day|get_date:"-1" }}</option>
+                                              <select name="days" id="day" >
+                                                  {% for servicedetail in d.serviceDetailsDays.all %}
+                                                    <option value="{{ servicedetail.Day|get_date:"-1" }}" dayId="{{ servicedetail.id }}">{{ servicedetail.Day|get_date:"-1" }}</option>
                                                     {% for num in n %}
-                                                      <option value="{{ servicedetail.Day|get_date:num }}">{{ servicedetail.Day|get_date:num }}</option>
+                                                      <option value="{{ servicedetail.Day|get_date:num }}" dayId="{{ servicedetail.id }}">{{ servicedetail.Day|get_date:num }}</option>
                                                     {% endfor %}
                                                   {% endfor %}
                                               </select> <br />
+
                                               <label for="Time">Time:</label>
                                               <select name="Time" id="Time">
-                                                {% for servicedetailDayTime in d.id|get_servicedetails1 %}
-                                                  <option value="{{ servicedetailDayTime.Time}},{{ servicedetailDayTime.Time|time:'H:i:s' }}">{{servicedetailDayTime.Time}}</option>
-                                                {% endfor %}
+                                                
                                               </select>
+                                              <!-- <script type="text/javascript" language="JavaScript">
+                                                document.write('<select name="Time" id="Time"><option value="">Select time</option></select>')
+                                                </script>
+                                                <noscript>
+                                                <select id="Time" name="Time">
+                                                    <option value="open">OPEN</option>
+                                                    <option value="delivered">DELIVERED</option>
+                                                </select>
+                                                </noscript> -->
                                               <input type="hidden" class="form-control" id="service_pk" name="service_pk" value={{d.id}}>
 
                                               <br />
@@ -135,4 +143,22 @@
 
   <br>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script language="javascript" type="text/javascript">
+    $("#day").change(function () {
+        var url = $("#appointmentForm").attr("data-times-url");
+        var dayId = $('option:selected', this).attr('dayId');
+
+        $.ajax({
+            url: url,
+            data: {
+                'dayId': dayId
+            },
+            success: function (data) {
+                $("#Time").html(data);
+            }
+        })
+
+    })
+</script>
   {% endblock %}
