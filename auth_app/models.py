@@ -27,8 +27,16 @@ class User(AbstractUser):
     otp          = models.IntegerField(default=rand_otp)
     profile_pic  = models.ImageField(upload_to='profile_pics', blank=True, null=True)
     status       = models.CharField(max_length=20, null=True, choices=statuses, default=statuses[0][1])
+
+    # billing address 
     city         = models.CharField(max_length=50, blank=True)
+    address = models.CharField(max_length=200, default="NULL")
+    flat_name = models.CharField(max_length=200, default="NULL")
+    landmark = models.CharField(max_length=200, default="NULL")
     pincode      = models.CharField(max_length=8, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+
+

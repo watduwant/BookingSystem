@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('auth_app', '0003_alter_user_otp'),
+        ('auth_app', '0005_alter_user_otp'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='user',
             name='otp',
-            field=models.IntegerField(default=3799),
+            field=models.IntegerField(default=5075),
         ),
     ]

@@ -1,5 +1,7 @@
+from pyexpat import model
 from django.db import models
 from auth_app.models import User
+from django.db.models.signals import post_save
 
 # Create your models here.
 week_days = (
@@ -19,8 +21,8 @@ class Shop(models.Model):
         ('D', 'DISABLE')
     )
     Name = models.CharField(max_length=190, unique=True)
-    Shop_owner = models.ForeignKey(
-        User, on_delete=models.CASCADE, blank=True, null=True)
+    Shop_owner = models.OneToOneField(
+        User, on_delete=models.SET_NULL, blank=True, null=True, related_name="shop")
     Address = models.CharField(max_length=300)
     Status = models.CharField(max_length=2, choices=shop_status, default='E')
     Interior_image = models.ImageField(
@@ -82,23 +84,35 @@ class Phlebotomist(models.Model):
     PhoneNumber = models.CharField(max_length=15)
 
 
+
 class Order(models.Model):
-    User =  models.OneToOneField(User, on_delete=models.CASCADE, related_name="Order")
-    DateOrdered = models.DateField()
+    user =  models.ForeignKey(User,null=True, blank=True ,on_delete=models.CASCADE, related_name="order")
+    DateOrdered = models.DateField(null=True, blank=True, auto_now=True)
     complete = models.BooleanField(default=False)
-    transactionId = models.CharField(max_length=12)
+    paymentDone = models.BooleanField(default=False)
+    transactionId = models.CharField(max_length=12, null=True, blank=True)
+    total_price = models.FloatField(default=0)
 
     def __str__(self):
-        return self.User + " - Order" 
+        return str(self.user) + " - Order" 
+
+class Cart(models.Model):
+    user =  models.OneToOneField(User,null=True, blank=True ,on_delete=models.CASCADE, related_name="cart")
+    total_price = models.FloatField(default=0)
+
+    def __str__(self):
+        return str(self.user) + " - Cart"
 
 class OrderService(models.Model):
-    Order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="orderServices")
-    PathologicalTestService = models.ForeignKey(Pathological_Test_Service, on_delete=models.CASCADE, related_name="pathologicalTestServices")
+    Order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="orderServices", null=True, blank=True)
+    Cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="orderServices", null=True, blank=True)
+    PathologicalTestService = models.ForeignKey(Pathological_Test_Service, on_delete=models.CASCADE, related_name="orderServices")
     DateAdded = models.DateField(auto_now_add=True)
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(default=1)
 
     def __str__(self):
-        return self.Order + " - " + self.quantity
+        return str(self.Cart) + " - " + str(self.quantity)
+
 
 Gender_Choices  = (
     ('M', 'Male'),
@@ -107,10 +121,10 @@ Gender_Choices  = (
 )
 
 class ShippingAddress(models.Model):
-    User = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shippingAddresses")
-    patientName = models.CharField(max_length=100)
-    age = models.IntegerField()
-    gender = models.CharField(choices=Gender_Choices, max_length=5)
+    User = models.OneToOneField(User, on_delete=models.CASCADE, related_name="shippingAddress")
+    # patientName = models.CharField(max_length=100)
+    # age = models.IntegerField()
+    # gender = models.CharField(choices=Gender_Choices, max_length=5)
     FlatName = models.CharField(max_length=200)
     StreetName = models.CharField(max_length=200)
     pincode =  models.CharField(max_length=10)
@@ -127,9 +141,9 @@ class ShippingAddress(models.Model):
 
 class Service(models.Model):
     Clinic = models.ForeignKey(
-        Shop, on_delete=models.CASCADE, null=True, blank=True)
+        Shop, on_delete=models.CASCADE, null=True, blank=True, related_name="services")
     Doctor = models.ForeignKey(
-        Doctor, on_delete=models.CASCADE, null=True, blank=True)
+        Doctor, on_delete=models.CASCADE, null=True, blank=True, related_name='services')
     Fees = models.IntegerField()
 
     class Meta:
@@ -159,7 +173,7 @@ class ServiceDetailsDay(models.Model):
         return self.get_name_day
 
 
-class ServiceDetailsDayTime(models.Model):
+class ServiceDetailsDayTime(models.Model): 
     ServiceDetailsDayID = models.ForeignKey(
         ServiceDetailsDay, on_delete=models.CASCADE, null=True, blank=True, related_name='serviceDetailsDayTimes')
     Time = models.TimeField()
@@ -174,6 +188,27 @@ class ServiceDetailsDayTime(models.Model):
 
     def __str__(self):
         return self.ServiceDetailsDayID.get_name_day + "--" + str(self.Time)
+
+
+def create_cart(sender, instance, created, *args, **kwargs):
+    user = instance
+    if created:
+        Cart.objects.create(user=user)
+
+
+def save_user_profile(sender, instance, **kwargs):
+    instance.cart.save()
+
+
+post_save.connect(create_cart, sender=User)
+post_save.connect(save_user_profile, sender=User)
+
+
+
+
+
+
+
 
 
 '''
