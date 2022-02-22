@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 from rest_framework import viewsets, mixins
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
