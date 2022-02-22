@@ -150,20 +150,87 @@ class PutDoctorSerializer(serializers.ModelSerializer):
     def get_visit_days(self, obj):
         return ServiceDaysSerializer(obj.serviceDetailsDays.all(), many=True).data
     
+class visitdaysSerializer(serializers.ModelSerializer):
+    serviceDetailsDayTimes = ServicedetailDayTimeSerializer(many=True)
 
-class ClinicDoctorSerializer(serializers.Serializer):
-    Doctor = DoctorSerializer()
-    visit_days = serializers.SerializerMethodField()
-    timings = serializers.SerializerMethodField()
+    class Meta:
+        model = ServiceDetailsDay
+        fields = ['id', 'Day', 'serviceDetailsDayTimes']
+
+
+class ClinicDoctorSerializer(serializers.ModelSerializer):
+    Doctor = serializers.SerializerMethodField()
+    serviceDetailsDays = visitdaysSerializer(many=True)
 
     class Meta:
         model = Service
-        fields = ['Doctor', 'Fees', 'visit_days', 'timings']
-    
-    def get_timings(self, obj):
-        queryset = ServiceDetailsDayTime.objects.filter(ServiceDetailsDayID__ServiceID=obj)
-        return ServicedetailDayTimeSerializer(queryset, many=True).data
+        fields = ['id', 'Doctor', 'Fees', 'serviceDetailsDays']
 
-    def get_visit_days(self, obj):
-        return ServiceDaysSerializer(obj.serviceDetailsDays.all(), many=True).data
+    def get_Doctor(self, obj):
+        return DoctorSerializer(obj.Doctor).data
 
+    def update(self, instance, validated_data):
+        visit_days_data = validated_data.pop('serviceDetailsDays')
+        visit_days = (instance.serviceDetailsDays).all()
+        visit_days = list(visit_days)
+        instance.Fees = validated_data.get('Fees', instance.Fees)
+        instance.save()
+
+        for visit_day_data in visit_days_data:
+            visit_day = visit_days.pop(0)
+            visit_day.Day = visit_day_data.get('Day', visit_day.Day)
+            timings = visit_day.serviceDetailsDayTimes.all()
+            timings = list(timings)
+            timings_data = visit_day_data.pop('serviceDetailsDayTimes')
+            for timing_data in timings_data:
+                timing = timings.pop(0)
+                timing.Time = timing_data.get('Time', timing.Time)
+                timing.Visit_capacity = timing_data.get('Visit_capacity', timing.Visit_capacity)
+                timing.save()
+            
+            visit_day.save()
+
+        return instance
+
+
+# {
+#     "serviceDetailsDays": [
+#         {
+#             "Day": "3",
+#             "serviceDetailsDayTimes": [
+#                 {
+#                     "id": 3,
+#                     "Time": "09:00:00",
+#                     "Visit_capacity": 30
+#                 },
+#                 {
+#                     "id": 4,
+#                     "Time": "14:00:00",
+#                     "Visit_capacity": 20
+#                 },
+#                 {
+#                     "id": 5,
+#                     "Time": "18:00:00",
+#                     "Visit_capacity": 20
+#                 }
+#             ]
+#         },
+#         {
+#             "id": 1,
+#             "Day": "4",
+#             "serviceDetailsDayTimes": [
+#                 {
+#                     "id": 1,
+#                     "Time": "09:00:00",
+#                     "Visit_capacity": 18
+#                 },
+#                 {
+#                     "id": 2,
+#                     "Time": "12:00:00",
+#                     "Visit_capacity": 50
+#                 }
+#             ]
+#         }
+#     ],
+#     "Fees": 700
+# }

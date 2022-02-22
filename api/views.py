@@ -1,7 +1,4 @@
 from asyncio.windows_events import NULL
-from contextlib import nullcontext
-from xmlrpc.client import ResponseError
-from django.shortcuts import render
 from rest_framework import viewsets, mixins
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -81,12 +78,10 @@ class ViewDoctorViewset(viewsets.ModelViewSet):
 
 
 
-    def get_serializer_class(self):
-        if self.request.method == 'GET':
-            if not self.request.user.shop:
-                return Response({"error": "You are not the ownwer or any shop"})
-            return ClinicDoctorSerializer
-        return PutDoctorSerializer
+    # def get_serializer_class(self):
+    #     if self.request.method == 'PUT':
+    #         return PutDoctorSerializer
+    #     return ClinicDoctorSerializer
         
     
 
