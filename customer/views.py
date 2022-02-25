@@ -107,8 +107,9 @@ def appointment(request):
             time2 = timelist[1]
             status = "P"
             time2 = datetime.datetime.strptime(time2, '%H:%M:%S').time()
+            serviceday = ServiceDetailsDay.objects.get(Day=day, ServiceID=service_pk)
             slots = ServiceDetailsDayTime.objects.get(
-                ServiceDetailsDayID__ServiceID=service_pk, Time=time2).Visit_capacity
+                ServiceDetailsDayID=serviceday, Time=time2).Visit_capacity
             Nslots = Appointment.objects.filter(Status="P", Service__ServiceDetailsDayID__ServiceID=service, day=day, time=time).count(
             ) + Appointment.objects.filter(Status="A", Service__ServiceDetailsDayID__ServiceID=service, day=day, time=time).count()
 

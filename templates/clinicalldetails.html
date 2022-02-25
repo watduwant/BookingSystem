@@ -118,14 +118,14 @@
                                 <!-- <button>+Book</button> -->
                                 <!-- Trigger the modal with a button -->
                                 <button type="button" class="btn btn-light btn-lg" data-toggle="modal"
-                                    data-target="#myModal">+Book</button>
+                                    data-target="#myModal{{d.id}}">+Book</button>
                                 <li>Fees:&#x20b9 {{d.Fees}}</li>
                             </ul>
 
 
 
                             <!-- Modal -->
-                            <div class="modal fade" id="myModal" role="dialog">
+                            <div class="modal fade" id="myModal{{d.id}}" role="dialog">
                                 <div class="modal-dialog">
 
                                     <!-- Modal content-->
@@ -136,7 +136,7 @@
                                                 data-dismiss="modal">&times;</button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="/appointment" method="post" id="appointmentForm" data-times-url="{% url 'loadtimes' %}">{% csrf_token %}
+                                            <form action="/appointment" method="post" class="appointmentForm" serviceId="{{d.id}}" data-times-url="{% url 'loadtimes' %}">{% csrf_token %}
                                               <label>Doctor Name:</label>
                                               <select name="doctor" id="doctor">
                                                 <option value="{{d.Doctor.Name}}">{{d.Doctor.Name}}</option>
@@ -152,7 +152,7 @@
                                               </select> <br />
 
                                               <label for="Time">Time:</label>
-                                              <select name="Time" id="Time">
+                                              <select name="Time" class="Time">
                                                 
                                               </select>
                                               <!-- <script type="text/javascript" language="JavaScript">
@@ -207,9 +207,11 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 <script language="javascript" type="text/javascript">
-    $("#day").change(function () {
-        var url = $("#appointmentForm").attr("data-times-url");
+    $('body').on('change', '#day', function(){
+        var url = $(".appointmentForm").attr("data-times-url");
+        var serviceId = $(".appointmentForm").attr("serviceId");
         var dayId = $('option:selected', this).attr('dayId');
+        console.log(dayId);
 
         $.ajax({
             url: url,
@@ -217,10 +219,25 @@
                 'dayId': dayId
             },
             success: function (data) {
-                $("#Time").html(data);
+                $(".Time").html(data);
             }
         })
-
     })
+    // $("#day").change(function () {
+    //     var url = $("#appointmentForm").attr("data-times-url");
+    //     var dayId = $('option:selected', this).attr('dayId');
+    //     console.log(dayId);
+
+    //     $.ajax({
+    //         url: url,
+    //         data: {
+    //             'dayId': dayId
+    //         },
+    //         success: function (data) {
+    //             $("#Time").html(data);
+    //         }
+    //     })
+
+    // })
 </script>
   {% endblock %}

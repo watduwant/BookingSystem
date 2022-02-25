@@ -33,12 +33,40 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         user = self.request.user
-        return Appointment.objects.filter(Service__ServiceDetailsDayID__ServiceID__Clinic=user.shop) 
+        return Appointment.objects.filter(Service__ServiceDetailsDayID__ServiceID__Clinic=user.shop) .order_by('Service__ServiceDetailsDayID__ServiceID__Doctor')
 
     def get_serializer_class(self):
         if self.request.method == "GET":
             return AppointmentSerializer
         return PutAppointmentSerializer
+    
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        data = serializer.data
+        # print(data)
+        prevDoc = 'None'
+        newdata = []
+        docApp = []
+        for item in data:
+            if prevDoc == 'None':
+                docApp.append(item)
+                prevDoc = item['doctor']['Name']
+            elif item['doctor']['Name'] == prevDoc:
+                docApp.append(item)
+            elif item['doctor']['Name'] != prevDoc:
+                newdata.append(docApp)
+                docApp = []
+                docApp.append(item)
+                prevDoc = item['doctor']['Name']
+        newdata.append(docApp)
+        return Response(newdata)
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer

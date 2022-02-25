@@ -16,8 +16,8 @@ Status_Choices  = (
     ('A', 'Accepted'),
     ('C', 'Cancelled'),
 )
-# prof = Profile.objects.filter(status='customer')
-# user = User.Profile.objects.filter(Profile=prof)
+
+
 class Appointment(models.Model):
     Customer = models.ForeignKey(User, on_delete=models.CASCADE,verbose_name='customer')
     Service = models.ForeignKey(ServiceDetailsDayTime, on_delete=models.CASCADE, verbose_name='service', blank=True, null=True)
@@ -27,7 +27,7 @@ class Appointment(models.Model):
     phone = models.CharField(max_length=10)
     Status = models.CharField(max_length=10, choices=Status_Choices, verbose_name='status', default='P')
     Rank  = models.IntegerField(default=0 , verbose_name='rank')
-    # date  = models.DateField(null=True, blank=True)
+
     day = models.CharField(max_length=50)
     time  = models.CharField(max_length=10, default="Noon")
 
