@@ -1,3 +1,4 @@
+from inspect import stack
 from pyexpat import model
 from django.db import models
 from auth_app.models import User
@@ -83,6 +84,10 @@ class Phlebotomist(models.Model):
     Name = models.CharField(max_length=100)
     PhoneNumber = models.CharField(max_length=15)
 
+    def __str__(self):
+        return self.Name
+    
+
 
 
 class Order(models.Model):
@@ -103,12 +108,24 @@ class Cart(models.Model):
     def __str__(self):
         return str(self.user) + " - Cart"
 
+status_choices = [
+    ('0', 'Not assigned'),
+    ('1', 'Assigned'),
+    ('2', 'delivered'),
+    ('3', 'Not Delivered'),
+    ('4', 'Collected'),
+    ('5', 'Not Collected')
+]
+
 class OrderService(models.Model):
     Order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="orderServices", null=True, blank=True)
     Cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="orderServices", null=True, blank=True)
     PathologicalTestService = models.ForeignKey(Pathological_Test_Service, on_delete=models.CASCADE, related_name="orderServices")
     DateAdded = models.DateField(auto_now_add=True)
     quantity = models.IntegerField(default=1)
+    status = models.CharField(max_length=1, choices=status_choices, default='0')
+    collected_date = models.DateField(null=True)
+    report = models.FileField(upload_to='reports', null=True, blank=True)
 
     def __str__(self):
         return str(self.Cart) + " - " + str(self.quantity)

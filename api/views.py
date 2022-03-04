@@ -1,10 +1,10 @@
 from rest_framework import viewsets, mixins
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from store.models import Shop, Doctor,Service,ServiceDetailsDay,ServiceDetailsDayTime
+from store.models import Phlebotomist, Shop, Doctor,Service,ServiceDetailsDay,ServiceDetailsDayTime, OrderService, Pathological_Test_Service
 from customer.models import Appointment
 from auth_app.models import User
-from .serializers import UserSerializer, ShopSerializer, DoctorSerializer, ServicedetailDaySerializer, ServicedetailDayTimeSerializer, ServiceSerializer, AppointmentSerializer, HomeSreenSerializer, PutAppointmentSerializer, ClinicDoctorSerializer, PutDoctorSerializer
+from .serializers import UserSerializer, ShopSerializer, DoctorSerializer, ServicedetailDaySerializer, ServicedetailDayTimeSerializer, ServiceSerializer, AppointmentSerializer, HomeSreenSerializer, PutAppointmentSerializer, ClinicDoctorSerializer, PhlebotomistSerializer, OrderServiceSerializer, PathoOrdersSerializer, PathologicalTestServiceSerializer
 # Create your views here.
 
 class ShopViewSet(viewsets.ModelViewSet):
@@ -103,12 +103,38 @@ class ViewDoctorViewset(viewsets.ModelViewSet):
 
         return Service.objects.filter(Clinic=clinic)
 
+class phlebotomistViewset(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PhlebotomistSerializer
+
+    def get_queryset(self):
+        return Phlebotomist.objects.filter(Shop=self.request.user.shop)
+
+class OrderServiceViewSet(viewsets.ModelViewSet):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = OrderServiceSerializer
+
+    def get_queryset(self):
+        return OrderService.objects.filter(Order__complete=True, PathologicalTestService__Shop=self.request.user.shop)
+    
+    
+class PathoOrdersViewSet(viewsets.ReadOnlyModelViewSet):
+
+    permission_classes = [IsAuthenticated]
+    serializer_class = PathoOrdersSerializer
+
+    def get_queryset(self):
+        return OrderService.objects.filter(Order__paymentDone=True, PathologicalTestService__Shop=self.request.user.shop)
 
 
-    # def get_serializer_class(self):
-    #     if self.request.method == 'PUT':
-    #         return PutDoctorSerializer
-    #     return ClinicDoctorSerializer
+class PathologicalTestServiceViewset(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PathologicalTestServiceSerializer
+
+    def get_queryset(self):
+        return Pathological_Test_Service.objects.filter(Shop=self.request.user.shop)
+    
         
     
 

@@ -1,4 +1,4 @@
-from store.models import Shop, Doctor, Service, ServiceDetailsDay,ServiceDetailsDayTime
+from store.models import Shop, Doctor, Service, ServiceDetailsDay,ServiceDetailsDayTime, Phlebotomist, OrderService, Pathological_Test_Service
 from customer.models import Appointment
 from auth_app.models import User
 from rest_framework import serializers
@@ -51,6 +51,34 @@ class PutAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = ['Status']
+
+class OrderServiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = OrderService
+        fields = '__all__'
+    
+
+class PathoOrdersSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='Order__user')
+    contact = serializers.CharField(source='Order__user__shippingAddress__MobileNumber')
+    date = serializers.DateField(source='DateAdded')
+    location = serializers.SerializerMethodField()
+    Test = serializers.CharField(source='PathologicalTestService__Tests')
+
+    class Meta:
+        model = OrderService
+        fields = ['name', 'contact', 'day', 'location', 'status', 'report', 'collected_date', 'Test']
+
+    def get_location(self, obj):
+        address =  obj.Order.user.shippingAddress
+        return f'{address.FlatName}, {address.StreetName}, {address.AddressType}, {address.pincode}' 
+
+class PathologicalTestServiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Pathological_Test_Service
+        fields = '__all__'
 
 
 # class ProfileSerializer(serializers.ModelSerializer):
@@ -156,6 +184,24 @@ class visitdaysSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceDetailsDay
         fields = ['id', 'Day', 'serviceDetailsDayTimes']
+
+class PhlebotomistTestsSerializer(serializers.ModelSerializer):
+    test = serializers.CharField(source='PathologicalTestService__Tests')
+    cost = serializers.CharField(source='PathologicalTestService__Price')
+
+    class Meta:
+        model = OrderService
+        fields = ['test', 'price']
+
+class PhlebotomistSerializer(serializers.ModelSerializer):
+    test = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Phlebotomist
+        fields = ['id', 'Name', 'PhoneNumber', 'test']
+    
+    def get_test(self, obj):
+        return PhlebotomistTestsSerializer(OrderService.objects.filter(PathologicalTestService__Shop=obj.Shop, Order__paymentDone=True), many=True).data
 
 
 class ClinicDoctorSerializer(serializers.ModelSerializer):
