@@ -26,19 +26,19 @@ class ServiceSerializer(serializers.ModelSerializer):
 class ServicedetailDaySerializer(serializers.ModelSerializer):
     class Meta:
         model  = ServiceDetailsDay
-        fields = ['id', 'Day']
+        fields = ['id', 'ServiceID', 'Day']
 
 class ServicedetailDayTimeSerializer(serializers.ModelSerializer):
     class Meta:
         model  = ServiceDetailsDayTime
-        fields = ['id', 'Time','Visit_capacity']
+        fields = ['id', 'ServiceDetailsDayID', 'Time','Visit_capacity']
 
 class AppointmentSerializer(serializers.ModelSerializer):
     doctor = serializers.SerializerMethodField(read_only=True)
     timing = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model  = Appointment
-        fields = ['id', 'doctor', 'Customer', 'timing', 'PatientName', 'Age', 'Sex', 'phone', 'Status', 'Rank','day', 'time']
+        fields = ['id', 'doctor', 'Service', 'Customer', 'timing', 'PatientName', 'Age', 'Sex', 'phone', 'Status', 'Rank','day', 'time']
 
     def get_doctor(self, obj):
         return DoctorSerializer(obj.Service.ServiceDetailsDayID.ServiceID.Doctor).data
@@ -81,12 +81,6 @@ class PathologicalTestServiceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class ProfileSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model  = Profile
-#         fields = ['id', 'email', 'user', 'profile_pic', 'phone', 'status', 'city', 'pincode']
-
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -120,10 +114,19 @@ class GetDoctorSerializer(serializers.ModelSerializer):
 
 class HomeSreenSerializer(serializers.ModelSerializer):
     doctors = serializers.SerializerMethodField()
+    shop_owner = serializers.SerializerMethodField()
+    mobile     = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Shop
-        fields = ['id', 'Name', 'Shop_owner', 'Image', 'Interior_image', 'Status', 'Shop_url', 'Opening_time', 'Closing_time', 'doctors']
+        fields = ['id', 'Name', 'shop_owner', 'Image', 'Interior_image', 'Address', 'Status', 'Shop_url', 'Opening_time', 'Closing_time', 'doctors', 'Status', 'OffDay', 'mobile']
+
+    def get_mobile(self, obj):
+        return obj.Shop_owner.mobile
+
+    def get_shop_owner(self, obj):
+        return obj.Shop_owner.email
 
     def get_doctors(self, obj):
         return GetDoctorSerializer(obj.services.all(), many=True).data

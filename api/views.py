@@ -28,7 +28,7 @@ class ServicedetailDayTimeViewSet(viewsets.ModelViewSet):
     serializer_class = ServicedetailDayTimeSerializer
 
 class AppointmentViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'put', 'patch']
+    http_method_names = ['get', 'put', 'patch', 'post']
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
@@ -36,7 +36,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         return Appointment.objects.filter(Service__ServiceDetailsDayID__ServiceID__Clinic=user.shop) .order_by('Service__ServiceDetailsDayID__ServiceID__Doctor')
 
     def get_serializer_class(self):
-        if self.request.method == "GET":
+        if self.request.method == "GET" or self.request.method == 'POST':
             return AppointmentSerializer
         return PutAppointmentSerializer
     
