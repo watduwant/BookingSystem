@@ -29,19 +29,18 @@ class Appointment(models.Model):
     Rank  = models.IntegerField(default=0 , verbose_name='rank')
 
     day = models.CharField(max_length=50)
-    time  = models.CharField(max_length=10, default="Noon")
+    time  = models.CharField(max_length=10, null=True, blank=True, default='Null')
 
     def __str__(self):
         return self.Customer.email + "--" + str(self.Service.Time) 
 
     def rank_generated(sender,instance, *args, **kwargs):
-        appointment = instance
-        service = appointment.Service
-        day = appointment.day
-        time = appointment.time
-        rank_alloted = Appointment.objects.filter(Status="P", Service=service, day=day, time=time).count() + Appointment.objects.filter(Status="A", Service=service, day=day, time=time).count()
-        print(rank_alloted)
-        Appointment.objects.filter(id=appointment.id).update(Rank = rank_alloted)
+        service = instance.Service
+        # day = service.ServiceDetailsDayID.Day
+        time = service.Time
+        rank_alloted = Appointment.objects.filter(Status="P", Service=service).count() + Appointment.objects.filter(Status="A", Service=service).count()
+        print(rank_alloted+1)
+        Appointment.objects.filter(id=instance.id).update(Rank = rank_alloted+1, time=time)
     
     class Meta:
         ordering = ['day']
