@@ -34,6 +34,7 @@ urlpatterns = [
                 path('api/auth', obtain_auth_token,name='auth'),
                 path('api/',include('api.urls'),name='api'),
                 path('accounts/', include('allauth.urls')),
+                path('api/pathological/',include('pathological_test.urls'),name='pathological'),
                 # path('api-auth/', include('rest_framework.urls')),
                 # path('api/dj-rest-auth/', include('dj_rest_auth.urls')),
                 #path('api/dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),

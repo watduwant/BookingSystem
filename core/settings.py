@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'store',
     'customer',
     'auth_app',
+    'pathological_test',
 
     
 ]
