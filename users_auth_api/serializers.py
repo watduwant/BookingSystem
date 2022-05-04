@@ -6,7 +6,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserProfile
-        fields = ('customer_id', 'phone_number', 'app_source')
+        fields = ('customer_id', 'phone_number')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -36,32 +36,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         profile.customer_id = profile_data.get('customer_id', profile.phone_number)
         profile.phone_number = profile_data.get('phone_number', profile.phone_number)
         profile.app_source = profile_data.get('app_source', profile.app_source)
-        # profile.permissions = profile_data.get('permissions', profile.permissions)
-        # profile.trial_period_days = int(profile_data.get('trial_period_days', profile.trial_period_days))
-        # profile.in_app_price_display = int(profile_data.get('in_app_price_display', profile.in_app_price_display))
-        # profile.account_opened = profile_data.get('account_opened', profile.account_opened)
-        # profile.belongs_to = profile_data.get('belongs_to', profile.belongs_to)
         profile.save()
 
         return instance
-
-
-
-
-class UserTrialSerializer(serializers.Serializer):
-    django_tutorial_subscription = serializers.BooleanField()
-    angular_tutorial_subscription = serializers.BooleanField()
-    django_project_subscription = serializers.BooleanField()
-    angular_project_subscription = serializers.BooleanField()
-
-class UserStockPermissionsSerializer(serializers.Serializer):
-    permissions = serializers.CharField()
-
-
-class UserSubscriptionSerializer(serializers.ModelSerializer):
-    """
-    Serializer for requesting a user subscription.
-    """
-    class Meta:
-        model = UserProfile
-        fields = ('django_tutorial_subscription','angular_tutorial_subscription','django_project_subscription','angular_project_subscription')

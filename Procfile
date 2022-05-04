@@ -1,1 +1,1 @@
-web: gunicorn django_tutorial_api.wsgi
+web: gunicorn starter_template.wsgi

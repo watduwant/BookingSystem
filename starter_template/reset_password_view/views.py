@@ -58,14 +58,13 @@ class PasswordResetConfirmView(PasswordContextMixin, FormView):
     @method_decorator(sensitive_post_parameters())
     @method_decorator(never_cache)
     def dispatch(self, *args, **kwargs):
-        assert 'uidb64' in kwargs and 'token' in kwargs and 'app_source' in kwargs
+        assert 'uidb64' in kwargs and 'token' in kwargs
 
         self.validlink = False
         self.user = self.get_user(kwargs['uidb64'])
 
         if self.user is not None:
             token = kwargs['token']
-            app_source = kwargs['app_source']
 
             if token == INTERNAL_RESET_URL_TOKEN:
                 session_token = self.request.session.get(INTERNAL_RESET_SESSION_TOKEN)
@@ -81,7 +80,7 @@ class PasswordResetConfirmView(PasswordContextMixin, FormView):
                     # HTTP Referer header.
                     self.request.session[INTERNAL_RESET_SESSION_TOKEN] = token
                     redirect_url = self.request.path.replace(token, INTERNAL_RESET_URL_TOKEN)
-                    return HttpResponseRedirect(redirect_url+"?source={}".format(app_source))
+                    return HttpResponseRedirect(redirect_url)
 
         # Display the "Password reset unsuccessful" page.
         return self.render_to_response(self.get_context_data())
@@ -111,10 +110,8 @@ class PasswordResetConfirmView(PasswordContextMixin, FormView):
         context = super().get_context_data(**kwargs)
         if self.validlink:
             context['validlink'] = True
-            context['app_source'] = self.request.GET.get('source')
         else:
             context.update({
-                'app_source': self.request.GET.get('source'),
                 'form': None,
                 'title': _('Password reset unsuccessful'),
                 'validlink': False,

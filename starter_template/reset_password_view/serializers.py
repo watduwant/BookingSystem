@@ -1,4 +1,4 @@
-from django_tutorial_api import settings
+from starter_template import settings
 from .forms import PasswordResetForm
 from rest_framework import serializers
 

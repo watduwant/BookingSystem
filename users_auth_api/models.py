@@ -26,11 +26,6 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, unique=True, on_delete=models.CASCADE, related_name='profile')
     customer_id = models.CharField(max_length=10, null=True, blank=True)
     phone_number = models.CharField(max_length=15, null=True, blank=True)
-    app_source = models.CharField(max_length=50, null=True, blank=True)
-    django_tutorial_subscription = models.BooleanField(default=False, help_text="Check this field to remove Django Tutorial popup blocker for this user")
-    angular_tutorial_subscription = models.BooleanField(default=False, help_text="Check this field to remove Angular Tutorial popup blocker for this user")
-    angular_project_subscription = models.BooleanField(default=False, help_text="Check this field to remove Angular Tutorial popup blocker for this user")
-    django_project_subscription = models.BooleanField(default=False, help_text="Check this field to remove Angular Tutorial popup blocker for this user")
 
     def __str__(self):
         return '{} {}'.format(self.user.first_name, self.user.last_name)
@@ -40,11 +35,10 @@ class UserProfile(models.Model):
 def notify_new_user_registration(sender, created, instance, **kwargs):
     if created:
         try:
-            subject = 'New user registration on app {}'.format(instance.app_source)
+            subject = 'New user registration on app {}'.format("Starter Template")
             html_message = render_to_string(
                 'admin-notifications/new-user-registration-notification.html',
                 {
-                    'app_source': instance.app_source,
                     'email': instance.user.email,
                      'first_name': instance.user.first_name,
                      'last_name': instance.user.last_name,
