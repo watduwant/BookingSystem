@@ -46,13 +46,8 @@ def notify_new_user_registration(sender, created, instance, **kwargs):
                  }
             )
             plain_message = strip_tags(html_message)
-            from_email = '{} <no-reply@appadminpanel.in>'.format(instance.app_source)
-            if instance.app_source == "ifl_services":
-                to = 'sbairagi825@gmail.com'
-            elif instance.app_source == "EquityGlobal" :
-                to = 'sbairagi825@gmail.com'
-            else:
-                to = 'sbairagi825@gmail.com'
+            from_email = '{} <no-reply@appadminpanel.in>'.format("watduwant")
+            to = 'sbairagi825@gmail.com'
             mail.send_mail(subject, plain_message, from_email, [to], html_message=html_message)
         except:
             pass
