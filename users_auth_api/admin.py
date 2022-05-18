@@ -18,6 +18,10 @@ class UserAdmin(BaseUserAdmin):
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        ('Personal info', {'fields': ('mobile', 'profile_pic', 'status', 'otp', 
+                                      'forgot_password')}),
+        ('Billing Address', {'fields': ('city', 'address', 'flat_name', 
+                                        'landmark', 'pincode')}),
     )
     add_fieldsets = (
         (None, {

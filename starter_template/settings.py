@@ -60,9 +60,20 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'multiselectfield',
 
+    # Pre existing
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth',
+    'allauth.socialaccount.providers.google',
+
     #Local apps
     'users_auth_api',
-    'notificationsapi'
+    'notificationsapi',
+    'pathological_test',
+    'api',
+    'store',
+    'customer',
 ]
 
 

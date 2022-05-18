@@ -35,7 +35,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
         profile.customer_id = profile_data.get('customer_id', profile.phone_number)
         profile.phone_number = profile_data.get('phone_number', profile.phone_number)
-        profile.app_source = profile_data.get('app_source', profile.app_source)
         profile.save()
 
         return instance

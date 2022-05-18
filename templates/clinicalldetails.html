@@ -1,0 +1,243 @@
+{% extends "base.html" %} {% load static %}
+{% block content %}
+{% load custom_tags %}
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+
+  <nav class="navbar navbar-default " id="navbar-style">
+    <div id="header" style="background: url({{details.Interior_image.url}})" class="container">
+        <div class="navbar-header">
+            <h1 class="head1">{{details.Name}}</h1>
+            <!-- <h1 class="head1">House</h1> -->
+        </div>
+    </div>
+    <div class='container'>
+        <div class="row" id="brand-style">
+            <div class="col-12">
+                <div id="brand">
+                    <div class="social-icons">
+                        <a href="#" class="heading">
+                            <h1>Doctors:</h1>
+                        </a>
+                        <div class="icon-arrag">
+                            <a href="#" class="icon"><i class="fa fa-map-marker"></i></a>
+                            <a href="#" class="icon"><i class="fa fa-phone"></i> </a>
+                            <a href="#" class="icon"><i class="fa fa-clock-o"></i>
+                                <p class='day-index'>Mon-sat<br>{{details.Opening_time}}-{{details.Closing_time}}</p>
+                                <!-- <p class='day-index'></p> -->
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </nav>
+
+  <section id="services">
+    <div class="container">
+        <div class="row">
+            {% for pathological in details.PathologicalTestServices.all %}
+            <div class="col-12 mt-3">
+                <div class="card">
+                    <div class="card-horizontal">
+                        <div class="img-square-wrapper">
+                            <img class="img" src={{pathological.Tests.Image.url}} alt="Card image cap">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{pathological.Tests.TestName}}</h4>
+                            <ul class="card-text">
+                                <li>Desc :{{pathological.Tests.Desc}}</li>
+                                <li>sample Type :{{pathological.Tests.SampleType}}</li>
+                                <!-- <button>+Book</button> -->
+                                <!-- Trigger the modal with a button -->
+                                <button type="button" class="btn btn-light btn-lg" data-toggle="modal"
+                                    data-target="#pathologicalModal{{pathological.id}}">+Book</button>
+                                <li>Fees:&#x20b9 {{pathological.Price}}</li>
+                            </ul>
+
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="pathologicalModal{{pathological.id}}" tabindex="-1" role="dialog" aria-labelledby="pathologicalModal{{pathological.id}}Label" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title" id="pathologicalModal{{pathological.id}}Label">Book Your Slot</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/bookService" method="post" id="pathalogicalForm">{% csrf_token %}
+                                              <input type="text" class="form-control" id="pathalogical_pk" name="pathological_pk" value="{{pathological.id}}">
+                                              <label for"patient_name">Patient Name:</label>
+                                              <input id="patient_name" name="patient_name" type="text" value="{{pathological.Tests.TestName}}"><br>
+                                              <label for="sex"> Sex</label>
+                                              <select name="sex" id="sex">
+                                                  <option value="none" selected>Sex</option>
+                                                  <option value="M">Male</option>
+                                                  <option value="F">Female</option>
+                                                  <option value="O">other</option>
+                                              </select><br>
+                                              <label for="age">Age:</label>
+                                              <input id="age" name="age" type="number"><br>
+                                              <label for="phone">Contact No:</label>
+                                              <input id="phone" name="phone" type="tel"><br>
+                                              <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+          {% for d in data %}
+            <div class="col-12 mt-3">
+                <div class="card">
+                    <div class="card-horizontal">
+                        <div class="img-square-wrapper">
+                            <img class="img" src={{d.Doctor.Image.url}} alt="Card image cap">
+                        </div>
+                        <div class="card-body">
+                            <h4 class="card-title">{{d.Doctor.Name}}</h4>
+                            <ul class="card-text">
+                                <li>Experrience:{{d.Doctor.Experience}}</li>
+                                <li>speciality :{{d.Doctor.Specialization}}</li>
+                                <!-- <button>+Book</button> -->
+                                <!-- Trigger the modal with a button -->
+                                <button type="button" class="btn btn-light btn-lg" data-toggle="modal"
+                                    data-target="#myModal{{d.id}}">+Book</button>
+                                <li>Fees:&#x20b9 {{d.Fees}}</li>
+                            </ul>
+
+
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal{{d.id}}" role="dialog">
+                                <div class="modal-dialog">
+
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Book Your Slot</h4>
+                                            <button type="button" class="close"
+                                                data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="/appointment" method="post" class="appointmentForm" serviceId="{{d.id}}" data-times-url="{% url 'loadtimes' %}">{% csrf_token %}
+                                              <label>Doctor Name:</label>
+                                              <select name="doctor" id="doctor">
+                                                <option value="{{d.Doctor.Name}}">{{d.Doctor.Name}}</option>
+                                              </select><br />
+                                              <label for="days">Day:</label>
+                                              <select name="days" id="day" >
+                                                  {% for servicedetail in d.serviceDetailsDays.all %}
+                                                    <option value="{{ servicedetail.Day|get_date:"-1" }}" dayId="{{ servicedetail.id }}">{{ servicedetail.Day|get_date:"-1" }}</option>
+                                                    {% for num in n %}
+                                                      <option value="{{ servicedetail.Day|get_date:num }}" dayId="{{ servicedetail.id }}">{{ servicedetail.Day|get_date:num }}</option>
+                                                    {% endfor %}
+                                                  {% endfor %}
+                                              </select> <br />
+
+                                              <label for="Time">Time:</label>
+                                              <select name="Time" class="Time">
+                                                
+                                              </select>
+                                              <!-- <script type="text/javascript" language="JavaScript">
+                                                document.write('<select name="Time" id="Time"><option value="">Select time</option></select>')
+                                                </script>
+                                                <noscript>
+                                                <select id="Time" name="Time">
+                                                    <option value="open">OPEN</option>
+                                                    <option value="delivered">DELIVERED</option>
+                                                </select>
+                                                </noscript> -->
+                                              <input type="hidden" class="form-control" id="service_pk" name="service_pk" value={{d.id}}>
+
+                                              <br />
+
+                                              <label for"patient_name">Patient Name:</label>
+                                              <input id="patient_name" name="patient_name" type="text"><br>
+                                              <label for="sex"> Sex</label>
+                                              <select name="sex" id="sex">
+                                                  <option value="none" selected>Sex</option>
+                                                  <option value="M">Male</option>
+                                                  <option value="F">Female</option>
+                                                  <option value="O">other</option>
+                                              </select><br>
+                                              <label for="age">Age:</label>
+                                              <input id="age" name="age" type="number"><br>
+                                              <label for="phone">Contact No:</label>
+                                              <input id="phone" name="phone" type="tel"><br>
+                                              {% comment %} <label for="email">Email</label>
+                                              <input type="email"> {% endcomment %}
+                                              <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                                            <form>
+                                            {% comment %} <button type="button" class="otp">Send OTP</button> {% endcomment %}
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default"
+                                                data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+    </div>
+  </section>  
+
+  <br>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script language="javascript" type="text/javascript">
+    $('body').on('change', '#day', function(){
+        var url = $(".appointmentForm").attr("data-times-url");
+        var serviceId = $(".appointmentForm").attr("serviceId");
+        var dayId = $('option:selected', this).attr('dayId');
+        console.log(dayId);
+
+        $.ajax({
+            url: url,
+            data: {
+                'dayId': dayId
+            },
+            success: function (data) {
+                $(".Time").html(data);
+            }
+        })
+    })
+    // $("#day").change(function () {
+    //     var url = $("#appointmentForm").attr("data-times-url");
+    //     var dayId = $('option:selected', this).attr('dayId');
+    //     console.log(dayId);
+
+    //     $.ajax({
+    //         url: url,
+    //         data: {
+    //             'dayId': dayId
+    //         },
+    //         success: function (data) {
+    //             $("#Time").html(data);
+    //         }
+    //     })
+
+    // })
+</script>
+  {% endblock %}

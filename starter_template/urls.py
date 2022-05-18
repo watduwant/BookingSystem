@@ -20,6 +20,9 @@ from notificationsapi.views import FCMDeviceAuthorizedViewSet
 from django.contrib.auth import views as auth_view
 from django.conf import settings
 from django.conf.urls.static import static
+# from user.views import obtain_auth_token
+from users_auth_api.views import obtain_auth_token
+from customer.views import appointment
 
 admin.site.site_header = "Django Tutorial Admin Portal"
 admin.site.site_title = "Django Tutorial Admin Portal"
@@ -31,6 +34,12 @@ urlpatterns = [
     path('api/notifications/', include('notificationsapi.urls')),
     path('devices/', FCMDeviceAuthorizedViewSet.as_view({'post': 'create'}),
          name='create_fcm_device'),
+    path('store/',include('store.urls'),name='store'),
+    path('api/pathological/',include('pathological_test.urls'),name='pathological'),
+    path('api/',include('api.urls'),name='api'),
+    path('accounts/', include('allauth.urls')),
+    path('api/auth', obtain_auth_token,name='auth'),
+    path('appointment', appointment, name="appointment"),
 
     #Auth Urls
     path('auth/password/reset/', PasswordResetView.as_view(),
