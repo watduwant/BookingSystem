@@ -40,6 +40,8 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('api/auth', obtain_auth_token,name='auth'),
     path('appointment', appointment, name="appointment"),
+    path('',include('customer.urls'),name='customer'),
+    path('api-old/',include('api.urls'),name='api'),
 
     #Auth Urls
     path('auth/password/reset/', PasswordResetView.as_view(),
