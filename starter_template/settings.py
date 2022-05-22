@@ -309,8 +309,8 @@ ACCOUNT_USERNAME_REQUIRED = False
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
-STATIC_ROOT = os.path.join(BASE_DIR,'static_root')
-# STATIC_ROOT = 'staticfiles'
+# STATIC_ROOT = os.path.join(BASE_DIR,'static_root')
+STATIC_ROOT = 'staticfiles'
 
 
 MESSAGE_TAGS = {
