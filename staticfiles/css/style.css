@@ -1,0 +1,279 @@
+@import 'https://fonts.googleapis.com/css?family=Montserrat:300, 400, 700&display=swap';
+body {
+	font-family: 'Open Sans', sans-serif;
+	line-height: 20px;
+	/* color: #999999; */
+	font-size: 300;
+	font-size: 16px;
+}
+html{
+    font-family:'Montserrat', sans-serif;
+    scroll-behavior: smooth;
+    padding: 0px;
+}
+a{
+    text-decoration: none;
+}
+/*  header */
+
+#logo{
+    float: left;
+    width: 80px;
+    height: 80px;
+    margin-top: -5px;
+    margin-left: 10px;
+    background-color: #ccc;
+    background-size:cover ;
+    border-radius: 50%;
+    position: absolute;
+    top: 0px;
+    border:2px solid gold;
+}
+#header{
+    /* position:fixed; */
+    /* background-image: url(img/head4.jpg); */
+    object-fit:contain;
+    background-size:cover;
+    padding: 3vh;
+    margin-left: auto;
+    margin-right: auto; 
+    height: 140px;
+    width: 70rem;
+    
+}
+#header .navbar-header{
+    color: white;
+    font-size: 2rem;
+    position:relative;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    text-align: center;
+    padding: 0px;
+
+}
+#header .navbar-header .head1{
+line-height: 0.7;
+}
+#brand .social-icons a{ 
+    position:relative;
+    display: flex;
+    /* width: 90; */
+    height: 50px;
+    float: right;
+    padding: 30px;
+    color: black;
+    text-decoration: none;
+
+    }
+#brand .social-icons .icon{
+    color: black;
+    font-size: 30px;
+    position: relative;
+}
+#brand .social-icons .heading{
+    color:black ;
+    float: left;
+    }
+.card-horizontal {
+    display: flex;
+    flex: 1 1 auto;
+}
+.icon-arrag {
+    float: left;
+    margin-left: 647px;
+    margin-top: -50px;
+    margin-bottom: -10px;
+}
+
+#brand .social-icons .heading {
+    color: black;
+    float: left;
+    margin-top: -30px;
+}
+.day-index{
+    font-size: 12px;
+    margin-left: 10px;
+    font-family: emoji;
+    font-weight: 600;
+    padding: 1px;
+    line-height: 1;
+}
+/* end header */
+
+
+/* service section  */
+.img{
+    border-radius: 50%;
+    margin-top: 20px;
+    margin-left: 10px;
+    height: 130px;
+    width: 130px;
+}
+ #services .card{
+    background-color: black;
+    color: white;
+}
+#services #myModal .modal-content{
+    border-radius: 30px;
+    height: 500px;
+    padding: 50px;
+    margin: 80px;
+}
+#services #myModal .modal-content input{
+    border-width: 0 0 2px;
+    border-color: black;
+}
+#services .card-body .card-title{
+    /* text-align: center; */
+    color: crimson;
+}
+#services .card-body button{
+    color: crimson;
+}
+#services .card .card-body button{
+float: right;
+border-radius: 40px;
+width: 100px;
+font-weight: bold;
+}
+#services .modal-body{
+    font-weight: bold;
+}
+#services .modal-content .modal-title{
+    color: black;
+    margin-left: 80px;
+}
+#services .modal-content .modal-header{
+    color: black;
+    border-bottom: solid;
+}
+#services .modal-body{
+    color: #000;
+}
+#services .modal-body .otp{
+    background-color: black;
+    color: white;
+    font-size: 10px;
+    margin-top: 5px;
+    
+}
+#services .modal-footer button{
+    background-color: black;
+    color: white;
+    
+} 
+
+
+/*  end service section  */
+@media screen and (max-width: 600px) {
+    #navbar-style{
+        padding: 0px !important;
+        /* width: 23rem; */
+    }
+    /* #brand{
+        display: block;
+    } */
+    #brand .social-icons .heading {
+        color: black;
+        float: left;
+        margin-left: -47px;
+    }
+
+}
+@media  screen and (max-width: 400px){
+    /* header section */  
+    #logo{
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        margin-top: 0;
+        margin-left: 5px;
+        border-radius: 50%;
+        top: 0px;
+    }
+    #navbar-style{
+        width: 381px;
+    }
+    #header{
+        height: 90px;
+    }
+    #header .navbar-header .head1{
+        font-size: 1.5rem !important;
+        padding-top: 0%;
+    }  
+    #brand .social-icons{
+        margin-top: 10px;
+    }
+    #brand .social-icons .icon{
+        font-size: 20px;
+    }
+    .icon-arrag {
+        margin-left:8%;
+        margin-top: -1.2cm;
+        width: 340px;
+    }
+    #brand .icon-arrag .icon{ 
+        padding: 24px;
+        padding-left: 0px;
+    }
+    #brand .social-icons .heading {
+        margin-top: -40px;
+    }
+    #brand .social-icons .heading h1{
+        font-size: 1.5rem;
+        font-weight: revert;
+    }
+    /* end  header section */
+
+    /* service selection */
+     .img{
+
+       border-radius: 50%;
+       margin-top: 20px;
+       margin-left: 15px;
+       height: 95px;
+       width: 95px;
+   }
+  
+   #services .container{
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 381px;
+    
+   }
+   #services .card .card-body button{
+    border-radius: 40px;
+    width: 80px;
+    font-weight: bold;
+    padding: 0px 0px;
+    margin-right: -15px;
+    }
+    #services .card .card-body{
+        padding: 1.rem;
+        padding-top: 5px;
+    }
+    #services  .card-text{
+        margin-left: -30px;
+        
+    }
+    #services .card{
+        height: 140px;
+        }
+
+    #services #myModal .modal-content 
+    {
+         border-radius: 30px;
+         height: 0x;
+         padding: 15px;
+         margin: 0px;
+         width: 365px;
+         height: 430px;
+    }
+    #services .modal-content .modal-title{
+        margin-left: 60px;
+    }
+
+}
+    /*  end service selection */  
+

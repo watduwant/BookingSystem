@@ -31,7 +31,7 @@ a{
 }
 #header{
     /* position:fixed; */
-    background-image: url(img/head4.jpg);
+    /* background-image: url(img/head4.jpg); */
     object-fit:contain;
     background-size:cover;
     padding: 3vh;
