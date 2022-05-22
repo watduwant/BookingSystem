@@ -126,7 +126,8 @@ def otp_verify(request):
     if not request.POST:
         print(f'{user.get_full_name()} - {user.otp}')
         body = f'Hello {user.get_full_name()} your otp is {user.otp}'
-        sendmsg(user.mobile, body)
+        # sendmsg(user.mobile, body)
+        print(sendmsg(user.mobile, body))
         # send sms 
     if request.method == "POST":
         if int(otpWritten) == int(user.otp):

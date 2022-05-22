@@ -34,14 +34,16 @@ urlpatterns = [
     path('api/notifications/', include('notificationsapi.urls')),
     path('devices/', FCMDeviceAuthorizedViewSet.as_view({'post': 'create'}),
          name='create_fcm_device'),
-    path('store/',include('store.urls'),name='store'),
-    path('api/pathological/',include('pathological_test.urls'),name='pathological'),
-    path('api/',include('api.urls'),name='api'),
+
+
+    #  existing urls
+    path('store/',include('store.urls'), name='store'),
+    path('api/pathological/',include('pathological_test.urls'), name='pathological'),
+    path('api/old/',include('api.urls'), name='api'),
     path('accounts/', include('allauth.urls')),
-    path('api/auth', obtain_auth_token,name='auth'),
+    path('api/auth', obtain_auth_token, name='auth'),
     path('appointment', appointment, name="appointment"),
     path('',include('customer.urls'),name='customer'),
-    path('api-old/',include('api.urls'),name='api'),
 
     #Auth Urls
     path('auth/password/reset/', PasswordResetView.as_view(),
