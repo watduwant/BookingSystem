@@ -1,6 +1,7 @@
 from rest_framework import viewsets, mixins
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from customer.views import appointment
 from store.models import Phlebotomist, Shop, Doctor,Service,ServiceDetailsDay,ServiceDetailsDayTime, OrderService, Pathological_Test_Service
 from customer.models import Appointment
 from users_auth_api.models import User
@@ -33,7 +34,12 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         user = self.request.user
-        return Appointment.objects.filter(Service__ServiceDetailsDayID__ServiceID__Clinic=user.shop) .order_by('Service__ServiceDetailsDayID__ServiceID__Doctor')
+        appointment = []
+        try:
+            appointment = Appointment.objects.filter(Service__ServiceDetailsDayID__ServiceID__Clinic=user.shop) .order_by('Service__ServiceDetailsDayID__ServiceID__Doctor')
+        except:
+            appointment = []
+        return appointment
 
     def get_serializer_class(self):
         if self.request.method == "GET" or self.request.method == 'POST':
@@ -72,7 +78,12 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        return User.objects.filter(status='so')
+        user = []
+        try:
+            user = User.objects.filter(status='so')
+        except:
+            user = []
+        return user
 
 # class HomeScreenViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
 #     queryset = Shop.objects.all()
@@ -96,19 +107,44 @@ class ViewDoctorViewset(viewsets.ModelViewSet):
     serializer_class = ClinicDoctorSerializer
     
     def get_queryset(self):
-        if self.request.user.shop:
-            clinic = Shop.objects.get(Shop_owner=self.request.user)
+        clinic = []
+        user_shop = None
+        try:
+            user_shop = self.request.user.shop
+        except:
+            user_shop = None
+        if user_shop != None:
+            
+            try:
+                clinic = Shop.objects.get(Shop_owner=self.request.user)
+            except:
+                clinic = []
         else: 
             return Service.objects.none()
 
-        return Service.objects.filter(Clinic=clinic)
+        service = []
+        
+
+        try:
+            service = Service.objects.filter(Clinic=clinic)
+        except:
+            service = []
+
+        return service
 
 class phlebotomistViewset(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = PhlebotomistSerializer
 
+    
     def get_queryset(self):
-        return Phlebotomist.objects.filter(Shop=self.request.user.shop)
+        queryset = []
+        try:
+            queryset = Phlebotomist.objects.filter(Shop=self.request.user.shop)
+        except:
+            queryset = []
+        return queryset
+
 
 class OrderServiceViewSet(viewsets.ModelViewSet):
 
@@ -116,7 +152,13 @@ class OrderServiceViewSet(viewsets.ModelViewSet):
     serializer_class = OrderServiceSerializer
 
     def get_queryset(self):
-        return OrderService.objects.filter(Order__complete=True, PathologicalTestService__Shop=self.request.user.shop)
+        queryset = []
+        try:
+            queryset = OrderService.objects.filter(Order__complete=True, PathologicalTestService__Shop=self.request.user.shop)
+        except:
+            queryset = []
+        return queryset
+
     
     
 class PathoOrdersViewSet(viewsets.ReadOnlyModelViewSet):
@@ -125,7 +167,12 @@ class PathoOrdersViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PathoOrdersSerializer
 
     def get_queryset(self):
-        return OrderService.objects.filter(Order__paymentDone=True, PathologicalTestService__Shop=self.request.user.shop)
+        queryset = []
+        try:
+            queryset = OrderService.objects.filter(Order__paymentDone=True, PathologicalTestService__Shop=self.request.user.shop)
+        except:
+            queryset = []
+        return queryset
 
 
 class PathologicalTestServiceViewset(viewsets.ModelViewSet):
@@ -133,7 +180,12 @@ class PathologicalTestServiceViewset(viewsets.ModelViewSet):
     serializer_class = PathologicalTestServiceSerializer
 
     def get_queryset(self):
-        return Pathological_Test_Service.objects.filter(Shop=self.request.user.shop)
+        queryset = []
+        try:
+            queryset = Pathological_Test_Service.objects.filter(Shop=self.request.user.shop)
+        except:
+            queryset = []
+        return queryset
     
         
     
