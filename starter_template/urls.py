@@ -24,9 +24,9 @@ from django.conf.urls.static import static
 from users_auth_api.views import obtain_auth_token
 from customer.views import appointment
 
-admin.site.site_header = "Django Tutorial Admin Portal"
-admin.site.site_title = "Django Tutorial Admin Portal"
-admin.site.index_title = "Welcome to Django Tutorial Admin Portal"
+admin.site.site_header = "WATDUWANT Admin Portal"
+admin.site.site_title = "WATDUWANT Admin Portal"
+admin.site.index_title = "WATDUWANT Tutorial Admin Portal"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
