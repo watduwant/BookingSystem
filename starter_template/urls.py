@@ -39,7 +39,7 @@ urlpatterns = [
     #  existing urls
     path('store/',include('store.urls'), name='store'),
     path('api/pathological/',include('pathological_test.urls'), name='pathological'),
-    path('api/old/',include('api.urls'), name='api'),
+    path('api/',include('api.urls'), name='api'),
     path('accounts/', include('allauth.urls')),
     path('api/auth', obtain_auth_token, name='auth'),
     path('appointment', appointment, name="appointment"),
