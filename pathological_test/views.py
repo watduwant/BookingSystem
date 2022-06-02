@@ -92,12 +92,12 @@ class PathologicalTestDetailsViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False, url_path="filter_by_clinic", url_name="filter_by_clinic")
     def filter_by_clinic(self, request, *args, **kwargs):
         clinic_id = self.request.query_params.get('clinic_id', '')
-        queryset = PathologicalTest.objects.filter(clinic=int(clinic_id))
+        queryset = PathologicalTestDetail.objects.filter(clinic=int(clinic_id))
         return filter_test(self, queryset)
         
 
     @action(methods=['get'], detail=False, url_path="filter_by_test", url_name="filter_by_test")
     def filter_by_test(self, request, *args, **kwargs):
         test_id = self.request.query_params.get('test_id', '')
-        queryset = PathologicalTest.objects.filter(test_name=int(test_id))
+        queryset = PathologicalTestDetail.objects.filter(test_name=int(test_id))
         return filter_test(self, queryset)
