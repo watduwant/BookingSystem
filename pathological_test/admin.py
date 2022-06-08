@@ -23,4 +23,4 @@ class PathologicalTestDetailAdmin(admin.ModelAdmin):
         ('fees',)
     )
 
-admin.site.register((ShopingCart, OrderDetail, UserOrder, Phlebotomist))
+admin.site.register((ShopingCart, OrderDetail, UserOrder, Phlebotomist, ClinicDoctor, Clinic))

@@ -1,12 +1,13 @@
 from django.shortcuts import render
+from requests import Response
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 
 
-from pathological_test.models import PathologicalTestDetail, PathologicalTest, ShopingCart, OrderDetail, UserOrder, Phlebotomist
-from pathological_test.serializers import PathologicalTestDetailSerializer, PathologicalTestSerializer, ShopingCartSerializer, GetShopingCartSerializer, OrderDetailSerializer, UserOrderSerializer, PhlebotomistSerializer
+from pathological_test.models import PathologicalTestDetail, PathologicalTest, ShopingCart, OrderDetail, UserOrder, Phlebotomist, Clinic, ClinicDoctor
+from pathological_test.serializers import ClinicSerializer, PathologicalTestDetailSerializer, PathologicalTestSerializer, ShopingCartSerializer, GetShopingCartSerializer, OrderDetailSerializer, UserOrderSerializer, PhlebotomistSerializer, ClinicDoctor, ClinicDoctorSerializer
 
 
 
@@ -22,6 +23,26 @@ class ShopingCartViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = ShopingCart.objects.filter(user=self.request.user)
         return queryset
+
+class ClinicViewSet(viewsets.ModelViewSet):
+    queryset = Clinic.objects.all()
+    serializer_class = ClinicSerializer
+
+class ClinicDoctorViewSet(viewsets.ModelViewSet):
+    queryset = ClinicDoctor.objects.all()
+    serializer_class = ClinicDoctorSerializer
+    pagination_class = LargeResultsSetPagination
+
+    @action(methods=['get'], detail=False, url_path="filter_by_clinic", url_name="filter_by_clinic")
+    def filter_by_clinic(self, request, *args, **kwargs):
+        clinic_id = self.request.query_params.get('clinic_id', '')
+        queryset = ClinicDoctor.objects.filter(clinic=int(clinic_id))
+        return filter_test(self, queryset)
+
+
+class UserOrderViewSet(viewsets.ModelViewSet):
+    queryset = UserOrder.objects.all()
+    serializer_class = UserOrderSerializer
 
 class UserOrderViewSet(viewsets.ModelViewSet):
     queryset = UserOrder.objects.all()

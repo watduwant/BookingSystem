@@ -1,12 +1,22 @@
 from rest_framework import serializers
-from pathological_test.models import PathologicalTestDetail, PathologicalTest, ShopingCart, OrderDetail, UserOrder, Phlebotomist
+from pathological_test.models import PathologicalTestDetail, PathologicalTest, ShopingCart, OrderDetail, UserOrder, Phlebotomist, ClinicDoctor, Clinic
 
 
 class PathologicalTestSerializer(serializers.ModelSerializer):
     class Meta:
         model  = PathologicalTest
         fields = ('id', 'name', 'description', 'sample_type',
-                 'precautions',)
+                 'precautions',)  #ClinicDoctor
+
+class ClinicDoctorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = ClinicDoctor
+        fields = "__all__"
+
+class ClinicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = Clinic
+        fields = "__all__"
 
 
 class UserOrderSerializer(serializers.ModelSerializer):
