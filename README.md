@@ -20,3 +20,6 @@ run <code> python manage.py migrate</code>
 run <code> python manage.py runserver</code><br>
 
 open the <a href="http://127.0.0.1:8000/api">this url http://127.0.0.1:8000/api </a>
+
+
+<div class="badge-base LI-profile-badge" data-locale="en_US" data-size="large" data-theme="dark" data-type="HORIZONTAL" data-vanity="the-freelancing-works" data-version="v1"><a class="badge-base__link LI-simple-link" href="https://in.linkedin.com/in/the-freelancing-works?trk=profile-badge">Freelance Work</a></div>
