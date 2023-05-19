@@ -5,7 +5,7 @@
 ## Note:
 <p>
 1. <code>pip install virtualenv</code><br>
-2. <code>virtualenv <"env-name"></code>
+2. <code>virtualenv <"env-name"></code><br>
 3. active env <code>source ./<"env-name">/bin/active</code> (for the linux user)
 </p>
 
