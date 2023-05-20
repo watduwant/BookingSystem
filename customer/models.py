@@ -1,3 +1,5 @@
+import logging
+
 from django.db import models
 # from auth_app.models import Profile
 from django_lifecycle import LifecycleModel, hook, AFTER_SAVE
@@ -36,7 +38,7 @@ class Appointment(LifecycleModel):
     )
     Service = models.ForeignKey(
         ServiceDetailsDayTime,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         verbose_name='service',
         blank=True,
         null=True
@@ -68,7 +70,7 @@ class Appointment(LifecycleModel):
             Service=service,
             day=day
         ).count()
-        print("----------->>", rank_alloted + 1)
+        logging.warning(f"rank is: {rank_alloted + 1}")
         Appointment.objects.filter(id=self.id).update(Rank=rank_alloted, time=time)
 
         class Meta:

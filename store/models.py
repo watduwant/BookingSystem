@@ -194,7 +194,11 @@ class ServiceDetailsDay(models.Model):
 
 class ServiceDetailsDayTime(models.Model):
     ServiceDetailsDayID = models.ForeignKey(
-        ServiceDetailsDay, on_delete=models.CASCADE, null=True, blank=True, related_name='serviceDetailsDayTimes')
+        ServiceDetailsDay,
+        on_delete=models.DO_NOTHING,
+        null=True,
+        blank=True,
+        related_name='serviceDetailsDayTimes')
     Time = models.TimeField()
     Visit_capacity = models.IntegerField()
 

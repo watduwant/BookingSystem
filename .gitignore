@@ -82,4 +82,8 @@ GitHub.sublime-settings
 .history
 
 # envs
-./booksys-env/*
+/booksys-env/*
+
+
+# migrations
+/auth_app/migrations
