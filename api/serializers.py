@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
+from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.authtoken.views import Token
 from rest_framework.serializers import ModelSerializer
@@ -312,14 +313,32 @@ class AppointmentServicesSerializer(serializers.ModelSerializer):
         fields = ['id', 'Day', 'timing', 'doctor']
 
 
-class AppointmentSerializer(serializers.ModelSerializer):
+class AppointmentSerializer(WritableNestedModelSerializer):
     doctor = serializers.SerializerMethodField(read_only=True)
     timing = serializers.SerializerMethodField(read_only=True)
+    user_data = UserSerializer(read_only=True)
+
+    def validate(self, data):
+        user_is_exist = data.get('user_is_exist')
+        appointment_user = data.get('appointment_user')
+        if not user_is_exist:
+            self.user_data = UserSerializer(write_only=True)
+            print(data)
+        else:
+            raise serializers.ValidationError(
+                {"error": "User does not exist in the system. Please provide valid user information."}
+            )
+
+        return data
 
     class Meta:
         model = Appointment
-        fields = ['id', 'Service', 'Customer', 'PatientName', 'Age', 'Sex', 'phone', 'Status',
-                  'Rank', 'day', 'time', 'doctor', 'timing']
+        fields = [
+            'id', 'user_data', 'Service', 'PatientName', 'Age',
+            'Sex', 'phone', 'Status',
+            'Rank', 'day', 'time',
+            'doctor', 'timing', 'user_is_exist'
+        ]
 
     def get_doctor(self, obj):
         return DoctorSerializer(obj.Service.ServiceDetailsDayID.ServiceID.Doctor).data
@@ -328,12 +347,10 @@ class AppointmentSerializer(serializers.ModelSerializer):
         return ServicedetailDayTimeSerializer(obj.Service).data
 
 
-
 class AppointmentListSerializer(serializers.ModelSerializer):
     doctor = DoctorSerializer(read_only=True)
     Service = ServicedetailDayTimeSerializer(read_only=True)
-    Customer = UserSerializer(read_only=True)
-    shop_owner = UserSerializer(read_only=True)
+    appointment_user = UserSerializer(read_only=True)
 
     class Meta:
         model = Appointment

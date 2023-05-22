@@ -71,7 +71,7 @@ def btnchk(request):
 @login_required(login_url='login')
 def account(request):
     profile = User.objects.get(id=request.user.id)
-    appointments = Appointment.objects.filter(Customer=request.user)
+    appointments = Appointment.objects.filter(appointment_user=request.user)
     return render(request, 'customer/account.html', {'profile': profile, 'appointments': appointments})
 
 
@@ -130,7 +130,7 @@ def appointment(request, pk):
                 return redirect(f'../show_details/{shop_id}')
 
             #servicedetaildaytime = ServiceDetailsDayTime.objects.get(ServiceDetailsDayID__ServiceID=service)
-            appointment = Appointment(Customer=customer,Service=servicedetaildaytime, PatientName=patient_name,
+            appointment = Appointment(appointment_user=customer,Service=servicedetaildaytime, PatientName=patient_name,
                                       Age=age, Sex=sex, Status=status, phone=phone, day=date)
             appointment.save()
             messages.success(

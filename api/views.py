@@ -152,13 +152,15 @@ class AppointmentViewSet(BaseClass):
     serializer_class = AppointmentSerializer
 
     def perform_create(self, serializer):
-        serializer.save(shop_owner=self.request.user)
-        return
+        user = self.request.user.email
+        if User.objects.filter(email=user).exists():
+            serializer.save(appointment_user=self.request.user)
+
 
     def get_queryset(self):
         queryset = Appointment.objects.all()
         if self.action == 'list':
-            queryset = Appointment.objects.filter(shop_owner=self.request.user)
+            queryset = Appointment.objects.filter(appointment_user=self.request.user)
         return queryset
 
     def get_serializer(self, *args, **kwargs):
