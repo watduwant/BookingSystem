@@ -6,8 +6,8 @@
 <p>
 1. <code>pip install virtualenv</code><br>
 2. <code>virtualenv <"env-name"></code><br>
-3. active env <code>source ./<"env-name">/bin/active</code> (for the linux user)
-</p>
+3. active env <code>source ./<"env-name">/bin/active</code> (for the linux user)<br>
+4. run  <code>pip install -r requirements.txt</code></p>
 
 ### step: 1
 setup your local postgres
