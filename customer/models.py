@@ -27,7 +27,8 @@ class Appointment(LifecycleModel):
     appointment_user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='customer_appointment'
+        related_name='customer_appointment',
+        verbose_name='patient_detail_code'
     )
     Service = models.ForeignKey(
         ServiceDetailsDayTime,
@@ -41,7 +42,6 @@ class Appointment(LifecycleModel):
     Sex = models.CharField(max_length=10, choices=Gender_Choices, verbose_name='gender')
     phone = models.CharField(max_length=10)
     Status = models.CharField(max_length=10, choices=Status_Choices, verbose_name='status', default='P')
-    user_is_exist = models.BooleanField(default=False)
     Rank = models.IntegerField(default=0, verbose_name='rank')
     date = models.DateField(null=True, blank=True)
     day = models.CharField(max_length=50)

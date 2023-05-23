@@ -317,27 +317,44 @@ class AppointmentSerializer(WritableNestedModelSerializer):
     doctor = serializers.SerializerMethodField(read_only=True)
     timing = serializers.SerializerMethodField(read_only=True)
     user_data = UserSerializer(read_only=True)
+    patient_detail_code = serializers.CharField(source='appointment_user', required=False)
 
-    def validate(self, data):
-        user_is_exist = data.get('user_is_exist')
-        appointment_user = data.get('appointment_user')
-        if not user_is_exist:
-            self.user_data = UserSerializer(write_only=True)
-            print(data)
-        else:
+    def validate(self, attrs):
+        """
+        here the user is register in our system
+        so take id or send error enter id
+        -------------------------------------
+        here the shop owner create appointment
+        then there 2 way
+        1. take patient user id
+        2. create new patient
+        -------------------------------------
+        """
+        patient_detail_id = self.context.get('request').data.get('patient_detail_code')
+        user = User.objects.filter(id=patient_detail_id)
+
+        if not user:
             raise serializers.ValidationError(
                 {"error": "User does not exist in the system. Please provide valid user information."}
             )
+        return attrs
 
-        return data
+    def create(self, validated_data):
+        appointment_user = validated_data.pop('appointment_user')
+        user = User.objects.filter(id=appointment_user).first()
+        validated_data['appointment_user'] = user
+        instance = Appointment.objects.create(**validated_data)
+        return instance
+
 
     class Meta:
         model = Appointment
         fields = [
-            'id', 'user_data', 'Service', 'PatientName', 'Age',
+            'id', 'patient_detail_code', 'user_data',
+            'Service', 'PatientName', 'Age',
             'Sex', 'phone', 'Status',
             'Rank', 'day', 'time',
-            'doctor', 'timing', 'user_is_exist'
+            'doctor', 'timing'
         ]
 
     def get_doctor(self, obj):
