@@ -21,7 +21,8 @@ UseCaseDiagram101.jpg
 .idea/**/uiDesigner.xml 
 .idea/**/gradle.xml 
 .idea/**/libraries 
-*.iws /out/ 
+*.iws /out/
+.idea
 
 # Python # 
 *.py[cod] 
