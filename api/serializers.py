@@ -320,22 +320,16 @@ class AppointmentSerializer(WritableNestedModelSerializer):
     patient_detail_code = serializers.CharField(source='appointment_user', required=False)
 
     def validate(self, attrs):
-        """
-        here the user is register in our system
-        so take id or send error enter id
-        -------------------------------------
-        here the shop owner create appointment
-        then there 2 way
-        1. take patient user id
-        2. create new patient
-        -------------------------------------
-        """
         patient_detail_id = self.context.get('request').data.get('patient_detail_code')
-        user = User.objects.filter(id=patient_detail_id)
+        if not patient_detail_id:
+            raise serializers.ValidationError(
+                {"error": "Please provide user information."}
+            )
 
+        user = User.objects.filter(id=patient_detail_id)
         if not user:
             raise serializers.ValidationError(
-                {"error": "User does not exist in the system. Please provide valid user information."}
+                {"error": "Please provide valid user information."}
             )
         return attrs
 
@@ -352,9 +346,8 @@ class AppointmentSerializer(WritableNestedModelSerializer):
         fields = [
             'id', 'patient_detail_code', 'user_data',
             'Service', 'PatientName', 'Age',
-            'Sex', 'phone', 'Status',
-            'Rank', 'day', 'time',
-            'doctor', 'timing'
+            'Sex', 'phone', 'Status', 'day',
+            'time', 'doctor', 'timing'
         ]
 
     def get_doctor(self, obj):

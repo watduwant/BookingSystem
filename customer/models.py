@@ -1,8 +1,6 @@
-import logging
-
 from django.db import models
 # from auth_app.models import Profile
-from django_lifecycle import LifecycleModel, hook, AFTER_SAVE
+from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE
 
 from auth_app.models import User
 from store.models import ServiceDetailsDayTime
@@ -50,44 +48,18 @@ class Appointment(LifecycleModel):
     def __str__(self):
         return self.appointment_user.email + "--" + str(self.Service.Time)
 
-    @hook(AFTER_SAVE)
+    @hook(AFTER_UPDATE, when='Status', was='P', is_now='A')
+    @hook(AFTER_UPDATE, when='Status', was='C', is_now='A')
     def rank_generated(self):
-        service = self.Service
-        day = self.day
-        time = self.time
         rank_alloted = Appointment.objects.filter(
-            Status="P",
-            Service=service,
-            day=day
-        ).count() + Appointment.objects.filter(
             Status="A",
-            Service=service,
-            day=day
+            Service=self.Service,
+            day=self.day
         ).count()
-        logging.warning(f"rank is: {rank_alloted + 1}")
-        Appointment.objects.filter(id=self.id).update(Rank=rank_alloted, time=time)
+        if rank_alloted == 0:
+            rank_alloted += 1
+        else:
+            Appointment.objects.filter(id=self.id).update(Rank=rank_alloted, time=self.time)
 
         class Meta:
             ordering = ['day']
-
-#     def rank_generated(sender, instance, *args, **kwargs):
-#         appointment = instance
-#         service = appointment.Service
-#         day = appointment.day
-#         # day = service.ServiceDetailsDayID.Day
-#         time = service.Time
-#         rank_alloted = Appointment.objects.filter(
-#             Status="P", Service=service,
-#             day=day).count() + Appointment.objects.filter(
-#             Status="A",
-#             Service=service,
-#             day=day
-#         ).count()
-#         print(rank_alloted + 1)
-#         Appointment.objects.filter(id=instance.id).update(Rank=rank_alloted, time=time)
-#
-#     class Meta:
-#         ordering = ['day']
-#
-#
-# post_save.connect(Appointment.rank_generated, sender=Appointment)
