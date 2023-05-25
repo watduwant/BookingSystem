@@ -151,19 +151,6 @@ class AppointmentViewSet(BaseClass):
     authentication_classes = [TokenAuthentication]
     serializer_class = AppointmentSerializer
 
-    # def perform_create(self, serializer):
-    #     patient_detail_id = self.request.data.get('patient_detail_code')
-    #     user = User.objects.filter(id=patient_detail_id)
-    #     if not user:
-    #         return Response(
-    #             {"message": "Data created successfully"},
-    #             status=status.HTTP_201_CREATED
-    #         )
-    #     serializer.save(appointment_user=user.first())
-    #     user = self.request.user.email
-    #     if User.objects.filter(email=user).exists():
-    #         serializer.save(appointment_user=self.request.user)
-
     def get_queryset(self):
         queryset = Appointment.objects.all()
         if self.action == 'list':
