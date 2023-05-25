@@ -7,6 +7,7 @@ from rest_framework import serializers
 from rest_framework.authtoken.views import Token
 from rest_framework.serializers import ModelSerializer
 
+from api.static_variables import USER_STATUS
 from auth_app.models import User
 from customer.models import Appointment
 from store.models import Shop, Doctor, Service, ServiceDetailsDay, ServiceDetailsDayTime, Phlebotomist, OrderService, \
@@ -316,35 +317,45 @@ class AppointmentServicesSerializer(serializers.ModelSerializer):
 class AppointmentSerializer(WritableNestedModelSerializer):
     doctor = serializers.SerializerMethodField(read_only=True)
     timing = serializers.SerializerMethodField(read_only=True)
-    user_data = UserSerializer(read_only=True)
-    patient_detail_code = serializers.CharField(source='appointment_user', required=False)
+    user_data = UserSerializer(allow_null=True, required=False)
+    user_code = serializers.CharField(
+        source='appointment_user',
+        required=False
+    )
 
     def validate(self, attrs):
-        patient_detail_id = self.context.get('request').data.get('patient_detail_code')
-        if not patient_detail_id:
+        requests = self.context.get('request')
+        token_user = requests.user
+        if token_user.status == USER_STATUS.SO and not requests.data.get('user_data'):
             raise serializers.ValidationError(
                 {"error": "Please provide user information."}
             )
-
-        user = User.objects.filter(id=patient_detail_id)
-        if not user:
+        elif token_user.status == USER_STATUS.CR and requests.data.get('user_data'):
             raise serializers.ValidationError(
-                {"error": "Please provide valid user information."}
+                {"error": "Please Don't added any extra stuff."}
             )
+
+        else:
+            attrs['token_user'] = token_user
         return attrs
 
     def create(self, validated_data):
-        appointment_user = validated_data.pop('appointment_user')
-        user = User.objects.filter(id=appointment_user).first()
-        validated_data['appointment_user'] = user
+        if validated_data.get('user_data'):
+            user_data = validated_data.pop('user_data')
+            if user_data:
+                user_serializer = UserSerializer(data=user_data)
+                user_serializer.is_valid(raise_exception=True)
+                user = user_serializer.save()
+                if user:
+                    print("user create")
+        validated_data['appointment_user'] = validated_data.pop('token_user')
         instance = Appointment.objects.create(**validated_data)
         return instance
-
 
     class Meta:
         model = Appointment
         fields = [
-            'id', 'patient_detail_code', 'user_data',
+            'id', 'user_code', 'user_data',
             'Service', 'PatientName', 'Age',
             'Sex', 'phone', 'Status', 'day',
             'time', 'doctor', 'timing'

@@ -164,30 +164,28 @@ class AppointmentViewSet(BaseClass):
     #     if User.objects.filter(email=user).exists():
     #         serializer.save(appointment_user=self.request.user)
 
+    def get_queryset(self):
+        queryset = Appointment.objects.all()
+        if self.action == 'list':
+            queryset = Appointment.objects.filter(appointment_user=self.request.user)
+        return queryset
 
-def get_queryset(self):
-    queryset = Appointment.objects.all()
-    if self.action == 'list':
-        queryset = Appointment.objects.filter(appointment_user=self.request.user)
-    return queryset
-
-
-def get_serializer(self, *args, **kwargs):
-    """
-    Use a custom serializer that includes nested objects.
-    """
-    serializer_class = self.get_serializer_class()
-    kwargs['context'] = self.get_serializer_context()
-    if self.action == 'list':
-        # Use a custom serializer for list actions that includes nested objects
-        serializer_class = AppointmentListSerializer
-    if self.action == 'retrieve':
-        # Use a custom serializer for retrieve actions that includes nested objects
-        serializer_class = AppointmentListSerializer
-    if self.action == 'update':
-        # Use a custom serializer for update actions that includes nested objects
-        serializer_class = PutAppointmentSerializer
-    return serializer_class(*args, **kwargs)
+    def get_serializer(self, *args, **kwargs):
+        """
+        Use a custom serializer that includes nested objects.
+        """
+        serializer_class = self.get_serializer_class()
+        kwargs['context'] = self.get_serializer_context()
+        if self.action == 'list':
+            # Use a custom serializer for list actions that includes nested objects
+            serializer_class = AppointmentListSerializer
+        if self.action == 'retrieve':
+            # Use a custom serializer for retrieve actions that includes nested objects
+            serializer_class = AppointmentListSerializer
+        if self.action == 'update':
+            # Use a custom serializer for update actions that includes nested objects
+            serializer_class = PutAppointmentSerializer
+        return serializer_class(*args, **kwargs)
 
 
 class UserViewSet(BaseClass):
