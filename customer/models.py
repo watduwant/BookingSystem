@@ -45,7 +45,7 @@ class Appointment(LifecycleModel):
         default=APPOINTMENT_STATUS.PENDING
     )
     Rank = models.IntegerField(default=0, verbose_name='rank')
-    date = models.DateField(null=True, blank=True)
+    slot_date = models.DateField(null=True, blank=True)
     day = models.CharField(max_length=50)
     time = models.TimeField(auto_now_add=True, blank=True, null=True)
 
@@ -63,7 +63,6 @@ class Appointment(LifecycleModel):
             Service=self.Service,
             day=self.day
         ).count()
-        print(rank_alloted)
         if rank_alloted == 0:
             rank_alloted += 1
         else:

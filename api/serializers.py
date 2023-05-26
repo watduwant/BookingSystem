@@ -1,12 +1,14 @@
 import datetime
 
 from django.contrib.auth import authenticate
+from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 from rest_framework.authtoken.views import Token
 from rest_framework.serializers import ModelSerializer
 
+from api.helpers import GetServiceSlot
 from api.static_variables import USER_STATUS
 from auth_app.models import User
 from customer.models import Appointment
@@ -316,13 +318,15 @@ class AppointmentServicesSerializer(serializers.ModelSerializer):
 
 class AppointmentSerializer(WritableNestedModelSerializer):
     doctor = serializers.SerializerMethodField(read_only=True)
-    timing = serializers.SerializerMethodField(read_only=True)
+    time = serializers.SerializerMethodField(read_only=True)
     user_data = UserSerializer(allow_null=True, required=False)
+    slot_date = serializers.DateField(format='%Y-%m-%d', input_formats=['%Y-%m-%d'])
     user_code = serializers.CharField(
         source='appointment_user',
         required=False
     )
 
+    @transaction.atomic
     def validate(self, attrs):
         requests = self.context.get('request')
         token_user = requests.user
@@ -337,6 +341,15 @@ class AppointmentSerializer(WritableNestedModelSerializer):
 
         else:
             attrs['token_user'] = token_user
+        slot_date = requests.data.get('slot_date')
+
+        slot = GetServiceSlot()
+        service = requests.data.get('Service')
+        slot_status, slot_date_list = slot.process(slot_date, service)
+        if not slot_status:
+            raise serializers.ValidationError(
+                {"error": f"Invalid slot date. Please choose a valid date from this {slot_date_list}"}
+            )
         return attrs
 
     def create(self, validated_data):
@@ -355,16 +368,16 @@ class AppointmentSerializer(WritableNestedModelSerializer):
     class Meta:
         model = Appointment
         fields = [
-            'id', 'user_code', 'user_data',
+            'id', 'user_code', 'user_data', 'slot_date',
             'Service', 'PatientName', 'Age',
             'Sex', 'phone', 'Status', 'day',
-            'time', 'doctor', 'timing'
+            'time', 'doctor'
         ]
 
     def get_doctor(self, obj):
         return DoctorSerializer(obj.Service.ServiceDetailsDayID.ServiceID.Doctor).data
 
-    def get_timing(self, obj):
+    def get_time(self, obj):
         return ServicedetailDayTimeSerializer(obj.Service).data
 
 
