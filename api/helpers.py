@@ -8,7 +8,7 @@ class GetServiceSlot(object):
 
     @staticmethod
     def service_data(service_id):
-        return ServiceDetailsDayTime.objects.filter(id=service_id).first()
+        return ServiceDetailsDayTime.objects.get(id=service_id)
 
     @staticmethod
     def check_slot(date, slot_date_list):
