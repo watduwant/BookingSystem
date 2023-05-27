@@ -25,6 +25,6 @@ class GetServiceSlot(object):
         weekday = self.service_data(service).ServiceDetailsDayID.Day
 
         for day in cal.itermonthdates(date.year, date.month):
-            if day.weekday() == int(weekday):
+            if day.weekday() == int(weekday) and day.month == date.month and date <= day:
                 slot_date_list.append(day.strftime("%Y-%m-%d"))
         return self.check_slot(date, slot_date_list)
