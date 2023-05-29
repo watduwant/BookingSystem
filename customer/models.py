@@ -1,6 +1,6 @@
 from django.db import models
 # from auth_app.models import Profile
-from django_lifecycle import LifecycleModel, hook, AFTER_SAVE
+from django_lifecycle import LifecycleModel, hook, AFTER_SAVE, AFTER_UPDATE
 
 from api.static_variables import APPOINTMENT_STATUS
 from auth_app.models import User
@@ -52,12 +52,29 @@ class Appointment(LifecycleModel):
         return self.appointment_user.email + "--" + str(self.Service.Time)
 
     @hook(AFTER_SAVE, when='Status', was=APPOINTMENT_STATUS.PENDING)
+    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.ACCEPTED)
+    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.ACCEPTED, is_now=APPOINTMENT_STATUS.CANCELLED)
     def rank_generated(self):
-        rank_alloted = Appointment.objects.filter(
-            Status=APPOINTMENT_STATUS.PENDING,
-            Service=self.Service,
-            slot_date=self.slot_date
-        ).count()
+        if self.Status == APPOINTMENT_STATUS.PENDING:
+            rank_alloted = Appointment.objects.filter(
+                Status=APPOINTMENT_STATUS.PENDING,
+                Service=self.Service,
+                slot_date=self.slot_date
+            ).count()
+        elif self.Status == APPOINTMENT_STATUS.ACCEPTED:
+            rank_alloted = Appointment.objects.filter(
+                Status=APPOINTMENT_STATUS.ACCEPTED,
+                Service=self.Service,
+                slot_date=self.slot_date
+            ).count()
+        # TODO: CANCELLED logic is pending
+        elif self.Status == APPOINTMENT_STATUS.CANCELLED:
+            rank_alloted = Appointment.objects.filter(
+                Status=APPOINTMENT_STATUS.ACCEPTED,
+                Service=self.Service,
+                slot_date=self.slot_date
+            ).count()
+
         if rank_alloted == 0:
             rank_alloted += 1
         else:
@@ -67,6 +84,23 @@ class Appointment(LifecycleModel):
                 Rank=rank_alloted,
                 time=self.time
             )
+
+    # @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.ACCEPTED)
+    # def rank_generated(self):
+    #     rank_alloted = Appointment.objects.filter(
+    #         Status=APPOINTMENT_STATUS.ACCEPTED,
+    #         Service=self.Service,
+    #         slot_date=self.slot_date
+    #     ).count()
+    #     if rank_alloted == 0:
+    #         rank_alloted += 1
+    #     else:
+    #         Appointment.objects.filter(
+    #             id=self.id
+    #         ).update(
+    #             Rank=rank_alloted,
+    #             time=self.time
+    #         )
 
     # @hook(AFTER_SAVE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.ACCEPTED)
     # def rank_generated(self):
