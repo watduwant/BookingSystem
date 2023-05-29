@@ -370,7 +370,7 @@ class AppointmentSerializer(WritableNestedModelSerializer):
         fields = [
             'id', 'user_code', 'user_data', 'slot_date',
             'Service', 'PatientName', 'Age',
-            'Sex', 'phone', 'Status', 'day',
+            'Sex', 'phone', 'Status',
             'time', 'doctor'
         ]
 

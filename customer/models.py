@@ -1,6 +1,6 @@
 from django.db import models
 # from auth_app.models import Profile
-from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE
+from django_lifecycle import LifecycleModel, hook, AFTER_SAVE
 
 from api.static_variables import APPOINTMENT_STATUS
 from auth_app.models import User
@@ -46,24 +46,36 @@ class Appointment(LifecycleModel):
     )
     Rank = models.IntegerField(default=0, verbose_name='rank')
     slot_date = models.DateField(null=True, blank=True)
-    day = models.CharField(max_length=50)
     time = models.TimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return self.appointment_user.email + "--" + str(self.Service.Time)
 
-    class Meta:
-        ordering = ['day']
-
-    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.ACCEPTED)
-    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.CANCELLED, is_now=APPOINTMENT_STATUS.ACCEPTED)
+    @hook(AFTER_SAVE, when='Status', was=APPOINTMENT_STATUS.PENDING)
     def rank_generated(self):
         rank_alloted = Appointment.objects.filter(
-            Status=APPOINTMENT_STATUS.ACCEPTED,
+            Status=APPOINTMENT_STATUS.PENDING,
             Service=self.Service,
-            day=self.day
+            slot_date=self.slot_date
         ).count()
         if rank_alloted == 0:
             rank_alloted += 1
         else:
-            Appointment.objects.filter(id=self.id).update(Rank=rank_alloted, time=self.time)
+            Appointment.objects.filter(
+                id=self.id
+            ).update(
+                Rank=rank_alloted,
+                time=self.time
+            )
+
+    # @hook(AFTER_SAVE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.ACCEPTED)
+    # def rank_generated(self):
+    #     rank_alloted = Appointment.objects.filter(
+    #         Status=APPOINTMENT_STATUS.PENDING,
+    #         Service=self.Service,
+    #         day=self.day
+    #     ).count()
+    #     if rank_alloted == 0:
+    #         rank_alloted += 1
+    #     else:
+    #         Appointment.objects.filter(id=self.id).update(Rank=rank_alloted, time=self.time)
