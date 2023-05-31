@@ -44,17 +44,19 @@ class Appointment(LifecycleModel):
         max_length=10, choices=APPOINTMENT_STATUS.Status_Choices, verbose_name='status',
         default=APPOINTMENT_STATUS.PENDING
     )
-    Rank = models.IntegerField(default=0, verbose_name='rank')
+    Rank = models.IntegerField(default=0, null=True, blank=True)
     slot_date = models.DateField(null=True, blank=True)
     time = models.TimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
-        return self.appointment_user.email + "--" + str(self.Service.Time)
+        # return self.appointment_user.email + "--" + str(self.Service.Time)
+        return f"{self.id} - {self.Rank} "
 
     @hook(AFTER_SAVE, when='Status', was=APPOINTMENT_STATUS.PENDING)
     @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.ACCEPTED)
     @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.ACCEPTED, is_now=APPOINTMENT_STATUS.CANCELLED)
     def rank_generated(self):
+        rank_alloted = None
         if self.Status == APPOINTMENT_STATUS.PENDING:
             rank_alloted = Appointment.objects.filter(
                 Status=APPOINTMENT_STATUS.PENDING,
@@ -67,14 +69,6 @@ class Appointment(LifecycleModel):
                 Service=self.Service,
                 slot_date=self.slot_date
             ).count()
-        # TODO: CANCELLED logic is pending
-        elif self.Status == APPOINTMENT_STATUS.CANCELLED:
-            rank_alloted = Appointment.objects.filter(
-                Status=APPOINTMENT_STATUS.ACCEPTED,
-                Service=self.Service,
-                slot_date=self.slot_date
-            ).count()
-
         if rank_alloted == 0:
             rank_alloted += 1
         else:
@@ -84,32 +78,13 @@ class Appointment(LifecycleModel):
                 Rank=rank_alloted,
                 time=self.time
             )
+        if self.Status == APPOINTMENT_STATUS.CANCELLED:
+            data = Appointment.objects.exclude(Status=APPOINTMENT_STATUS.CANCELLED).order_by('Rank')
+            Appointment.objects.filter(id=self.id).update(Rank=0)
 
-    # @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.ACCEPTED)
-    # def rank_generated(self):
-    #     rank_alloted = Appointment.objects.filter(
-    #         Status=APPOINTMENT_STATUS.ACCEPTED,
-    #         Service=self.Service,
-    #         slot_date=self.slot_date
-    #     ).count()
-    #     if rank_alloted == 0:
-    #         rank_alloted += 1
-    #     else:
-    #         Appointment.objects.filter(
-    #             id=self.id
-    #         ).update(
-    #             Rank=rank_alloted,
-    #             time=self.time
-    #         )
+            new_ranks = []
+            for index, obj in enumerate(data, start=1):
+                obj.Rank = index
+                new_ranks.append(obj)
 
-    # @hook(AFTER_SAVE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.ACCEPTED)
-    # def rank_generated(self):
-    #     rank_alloted = Appointment.objects.filter(
-    #         Status=APPOINTMENT_STATUS.PENDING,
-    #         Service=self.Service,
-    #         day=self.day
-    #     ).count()
-    #     if rank_alloted == 0:
-    #         rank_alloted += 1
-    #     else:
-    #         Appointment.objects.filter(id=self.id).update(Rank=rank_alloted, time=self.time)
+            Appointment.objects.bulk_update(new_ranks, ['Rank'])
