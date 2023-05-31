@@ -1,18 +1,11 @@
 from django.db import models
 from django.db.models.signals import post_save
 
+from api.static_variables import TIMESLOTS
 from auth_app.models import User
 
+
 # Create your models here.
-week_days = (
-    ("monday", 'Monday'),
-    ("tuesday", 'Tuesday'),
-    ("wednesday", 'Wednesday'),
-    ("thursday", 'Thursday'),
-    ("friday", 'Friday'),
-    ("saturday", 'Saturday'),
-    ("sunday", 'Sunday')
-)
 
 
 class Shop(models.Model):
@@ -30,7 +23,7 @@ class Shop(models.Model):
     Status = models.CharField(max_length=2, choices=shop_status, default='E')
     Interior_image = models.ImageField(
         upload_to='shops', blank=True, null=True)
-    OffDay = models.CharField(max_length=10, default="sunday", choices=week_days)
+    OffDay = models.CharField(max_length=10, default=TIMESLOTS.SUNDAY, choices=TIMESLOTS.week_days)
     Image = models.ImageField(upload_to='shops', blank=True, null=True)
     Opening_time = models.TimeField(null=True, blank=True)
     Closing_time = models.TimeField(null=True, blank=True)
@@ -179,7 +172,7 @@ class Service(models.Model):
 class ServiceDetailsDay(models.Model):
     ServiceID = models.ForeignKey(
         Service, on_delete=models.CASCADE, null=True, blank=True, related_name='serviceDetailsDays')
-    Day = models.CharField(max_length=10, choices=week_days, null=True)
+    Day = models.CharField(max_length=10, choices=TIMESLOTS.week_days, null=True)
 
     class Meta:
         unique_together = (('ServiceID', 'Day'),)

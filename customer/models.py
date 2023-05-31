@@ -1,6 +1,6 @@
 from django.db import models
 # from auth_app.models import Profile
-from django_lifecycle import LifecycleModel, hook, AFTER_SAVE, AFTER_UPDATE
+from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE, AFTER_SAVE
 
 from api.static_variables import APPOINTMENT_STATUS
 from auth_app.models import User
@@ -53,19 +53,13 @@ class Appointment(LifecycleModel):
         return f"{self.id} - {self.Rank} "
 
     @hook(AFTER_SAVE, when='Status', was=APPOINTMENT_STATUS.PENDING)
-    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.ACCEPTED)
+    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.CANCELLED)
     @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.ACCEPTED, is_now=APPOINTMENT_STATUS.CANCELLED)
     def rank_generated(self):
         rank_alloted = None
         if self.Status == APPOINTMENT_STATUS.PENDING:
             rank_alloted = Appointment.objects.filter(
                 Status=APPOINTMENT_STATUS.PENDING,
-                Service=self.Service,
-                slot_date=self.slot_date
-            ).count()
-        elif self.Status == APPOINTMENT_STATUS.ACCEPTED:
-            rank_alloted = Appointment.objects.filter(
-                Status=APPOINTMENT_STATUS.ACCEPTED,
                 Service=self.Service,
                 slot_date=self.slot_date
             ).count()
@@ -79,7 +73,14 @@ class Appointment(LifecycleModel):
                 time=self.time
             )
         if self.Status == APPOINTMENT_STATUS.CANCELLED:
-            data = Appointment.objects.exclude(Status=APPOINTMENT_STATUS.CANCELLED).order_by('Rank')
+            data = Appointment.objects.exclude(
+                Status=APPOINTMENT_STATUS.CANCELLED
+            ).filter(
+                slot_date=self.slot_date
+            ).order_by(
+                'Rank'
+            )
+
             Appointment.objects.filter(id=self.id).update(Rank=0)
 
             new_ranks = []
