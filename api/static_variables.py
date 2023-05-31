@@ -14,12 +14,12 @@ class APPOINTMENT_STATUS:
 class TIMESLOTS:
     MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY = 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
     week_days = (
-        ("monday", 'Monday'),
-        ("tuesday", 'Tuesday'),
-        ("wednesday", 'Wednesday'),
-        ("thursday", 'Thursday'),
-        ("friday", 'Friday'),
-        ("saturday", 'Saturday'),
-        ("sunday", 'Sunday')
+        ("0", 'Monday'),
+        ("1", 'Tuesday'),
+        ("2", 'Wednesday'),
+        ("3", 'Thursday'),
+        ("4", 'Friday'),
+        ("5", 'Saturday'),
+        ("6", 'Sunday')
     )
     weekDays = [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY]
