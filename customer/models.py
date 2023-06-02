@@ -54,6 +54,7 @@ class Appointment(LifecycleModel):
 
     @hook(AFTER_SAVE, when='Status', was=APPOINTMENT_STATUS.PENDING)
     @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.CANCELLED)
+    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.ACCEPTED)
     @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.ACCEPTED, is_now=APPOINTMENT_STATUS.CANCELLED)
     def rank_generated(self):
         rank_alloted = None
@@ -71,6 +72,14 @@ class Appointment(LifecycleModel):
             ).update(
                 Rank=rank_alloted,
                 time=self.time
+            )
+        if self.Status == APPOINTMENT_STATUS.ACCEPTED:
+            Appointment.objects.filter(
+                id=self.id,
+                Service=self.Service,
+                slot_date=self.slot_date
+            ).update(
+                Rank=self.Rank,
             )
         if self.Status == APPOINTMENT_STATUS.CANCELLED:
             data = Appointment.objects.exclude(
