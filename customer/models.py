@@ -46,7 +46,10 @@ class Appointment(LifecycleModel):
     )
     Rank = models.IntegerField(default=0, null=True, blank=True)
     slot_date = models.DateField(null=True, blank=True)
-    time = models.TimeField(auto_now_add=True, blank=True, null=True)
+    time = models.TimeField(blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     def __str__(self):
         # return self.appointment_user.email + "--" + str(self.Service.Time)
@@ -62,7 +65,8 @@ class Appointment(LifecycleModel):
             rank_alloted = Appointment.objects.filter(
                 Status=APPOINTMENT_STATUS.PENDING,
                 Service=self.Service,
-                slot_date=self.slot_date
+                slot_date=self.slot_date,
+                time=self.time
             ).count()
         if rank_alloted == 0:
             rank_alloted += 1
@@ -77,7 +81,8 @@ class Appointment(LifecycleModel):
             Appointment.objects.filter(
                 id=self.id,
                 Service=self.Service,
-                slot_date=self.slot_date
+                slot_date=self.slot_date,
+                time=self.time
             ).update(
                 Rank=self.Rank,
             )

@@ -361,6 +361,12 @@ class AppointmentSerializer(WritableNestedModelSerializer):
                 user = user_serializer.save()
                 if user:
                     print("user create")
+
+        service_details_day_time = ServiceDetailsDayTime.objects.filter(id=validated_data.get('Service').id).first()
+        if service_details_day_time:
+            validated_data['time'] = service_details_day_time.Time
+        else:
+            validated_data['time'] = datetime.datetime.now().time()
         validated_data['appointment_user'] = validated_data.pop('token_user')
         instance = Appointment.objects.create(**validated_data)
         return instance
