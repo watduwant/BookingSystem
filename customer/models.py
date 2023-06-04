@@ -56,11 +56,12 @@ class Appointment(LifecycleModel):
         return f"{self.id} - {self.Rank} "
 
     @hook(AFTER_SAVE, when='Status', was=APPOINTMENT_STATUS.PENDING)
-    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.CANCELLED)
     @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.ACCEPTED)
-    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.ACCEPTED, is_now=APPOINTMENT_STATUS.CANCELLED)
+    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.PENDING, is_now=APPOINTMENT_STATUS.CANCELLED)
+    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.ACCEPTED, is_now=APPOINTMENT_STATUS.PENDING)
+    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.CANCELLED, is_now=APPOINTMENT_STATUS.PENDING)
+    @hook(AFTER_UPDATE, when='Status', was=APPOINTMENT_STATUS.CANCELLED, is_now=APPOINTMENT_STATUS.ACCEPTED)
     def rank_generated(self):
-        rank_alloted = None
         if self.Status == APPOINTMENT_STATUS.PENDING:
             rank_alloted = Appointment.objects.filter(
                 Status=APPOINTMENT_STATUS.PENDING,
@@ -68,15 +69,15 @@ class Appointment(LifecycleModel):
                 slot_date=self.slot_date,
                 time=self.time
             ).count()
-        if rank_alloted == 0:
-            rank_alloted += 1
-        else:
-            Appointment.objects.filter(
-                id=self.id
-            ).update(
-                Rank=rank_alloted,
-                time=self.time
-            )
+            if rank_alloted == 0:
+                rank_alloted += 1
+            else:
+                Appointment.objects.filter(
+                    id=self.id
+                ).update(
+                    Rank=rank_alloted,
+                    time=self.time
+                )
         if self.Status == APPOINTMENT_STATUS.ACCEPTED:
             Appointment.objects.filter(
                 id=self.id,
@@ -90,7 +91,8 @@ class Appointment(LifecycleModel):
             data = Appointment.objects.exclude(
                 Status=APPOINTMENT_STATUS.CANCELLED
             ).filter(
-                slot_date=self.slot_date
+                slot_date=self.slot_date,
+                time=self.time
             ).order_by(
                 'Rank'
             )

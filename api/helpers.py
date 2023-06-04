@@ -18,8 +18,16 @@ class GetServiceSlot(object):
             slot_booked = False
         return slot_booked, slot_date_list
 
+    @staticmethod
+    def string_date_to_date(date):
+        """
+        please provide date string only,
+        provide date format like '%Y-%m-%d'
+        """
+        return datetime.strptime(date, '%Y-%m-%d').date()
+
     def process(self, slot_date, service):
-        date = datetime.strptime(slot_date, '%Y-%m-%d').date()
+        date = self.string_date_to_date(slot_date)
         slot_date_list = []
         cal = calendar.Calendar()
         weekday = self.service_data(service).ServiceDetailsDayID.Day

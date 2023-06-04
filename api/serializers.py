@@ -329,7 +329,19 @@ class AppointmentSerializer(WritableNestedModelSerializer):
     @transaction.atomic
     def validate(self, attrs):
         requests = self.context.get('request')
+        slot = GetServiceSlot()
         token_user = requests.user
+        slot_date = requests.data.get('slot_date')
+
+        if datetime.datetime.now().date().month < slot.string_date_to_date(
+                slot_date).month:
+            raise serializers.ValidationError(
+                {"error": "Please provide valid slot date information. it's future month date"}
+            )
+        if datetime.datetime.now().month > slot.string_date_to_date(slot_date).month:
+            raise serializers.ValidationError(
+                {"error": "Please provide valid slot date information. it's past month date"}
+            )
         if token_user.status == USER_STATUS.SO and not requests.data.get('user_data'):
             raise serializers.ValidationError(
                 {"error": "Please provide user information."}
@@ -341,9 +353,7 @@ class AppointmentSerializer(WritableNestedModelSerializer):
 
         else:
             attrs['token_user'] = token_user
-        slot_date = requests.data.get('slot_date')
 
-        slot = GetServiceSlot()
         service = requests.data.get('Service')
         slot_status, slot_date_list = slot.process(slot_date, service)
         if not slot_status:
