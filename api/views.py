@@ -155,6 +155,8 @@ class AppointmentViewSet(BaseClass):
         queryset = Appointment.objects.all()
         if self.action == 'list':
             queryset = Appointment.objects.filter(appointment_user=self.request.user)
+        if self.action == 'retrieve':
+            queryset = Appointment.objects.filter(appointment_user=self.request.user)
         return queryset
 
     def get_serializer(self, *args, **kwargs):
@@ -176,11 +178,13 @@ class AppointmentViewSet(BaseClass):
 
 
 class UserViewSet(BaseClass):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    # def get_queryset(self):
-    #     return User.objects.filter(status='so')
+    def get_queryset(self):
+        return User.objects.filter(email=self.request.user.email)
 
 
 # class HomeScreenViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):

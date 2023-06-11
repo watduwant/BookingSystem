@@ -2,22 +2,11 @@ from django.db import models
 # from auth_app.models import Profile
 from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE, AFTER_SAVE
 
-from api.static_variables import APPOINTMENT_STATUS
+from api.static_variables import APPOINTMENT_STATUS, GENDER_CHOICES
 from auth_app.models import User
 from store.models import ServiceDetailsDayTime
 
 # Create your models here.
-
-Gender_Choices = (
-    ('M', 'Male'),
-    ('F', 'Female'),
-    ('O', 'Other'),
-)
-Status_Choices = (
-    ('P', 'Pending'),
-    ('A', 'Accepted'),
-    ('C', 'Cancelled'),
-)
 
 
 # prof = Profile.objects.filter(status='customer')
@@ -38,7 +27,7 @@ class Appointment(LifecycleModel):
     )
     PatientName = models.CharField(max_length=200, verbose_name='patient_name')
     Age = models.IntegerField(null=False, blank=False, verbose_name='age')
-    Sex = models.CharField(max_length=10, choices=Gender_Choices, verbose_name='gender')
+    Sex = models.CharField(max_length=10, choices=GENDER_CHOICES.Gender_Choices, verbose_name='gender')
     phone = models.CharField(max_length=10)
     Status = models.CharField(
         max_length=10, choices=APPOINTMENT_STATUS.Status_Choices, verbose_name='status',

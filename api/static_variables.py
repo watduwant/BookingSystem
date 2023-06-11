@@ -1,5 +1,9 @@
 class USER_STATUS:
     CUSTOMER, CR, SHOPOWNER, SO = 'customer', 'cr', 'shopowner', 'so'
+    USER_ROLE = (
+        ('cr', 'customer'),
+        ('so', 'shopowner'),
+    )
 
 
 class APPOINTMENT_STATUS:
@@ -23,3 +27,12 @@ class TIMESLOTS:
         ("6", 'Sunday')
     )
     weekDays = [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY]
+
+
+class GENDER_CHOICES:
+    M, F, O = 'Male', 'Female', 'Other'
+    Gender_Choices = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other'),
+    )

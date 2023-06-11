@@ -2,7 +2,9 @@ import random  # from web
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django_lifecycle import hook, LifecycleModel, AFTER_CREATE, BEFORE_CREATE
 
+from api.static_variables import USER_STATUS
 from .manager import UserManager
 
 # # Create your models here.
@@ -31,12 +33,7 @@ rand_otp = random.randint(1000, 9999)  # from web
 #     instance.profile.save()
 
 
-class User(AbstractUser):
-    statuses = (
-        ('cr', 'customer'),
-        ('so', 'shopowner')
-    )
-
+class User(AbstractUser, LifecycleModel):
     username = None
     email = models.EmailField(unique=True)
     is_PhoneVerified = models.BooleanField(default=False)  # from web
@@ -51,7 +48,7 @@ class User(AbstractUser):
     mobile = models.CharField(max_length=15, blank=True, null=True)
     # otp = models.IntegerField(default=rand_otp)  # from web
     profile_pic = models.ImageField(upload_to='profile_pics', blank=True, null=True)
-    status = models.CharField(max_length=20, choices=statuses, default=statuses[0][1])
+    status = models.CharField(max_length=20, choices=USER_STATUS.USER_ROLE)
 
     # billing address  #from web
     city = models.CharField(max_length=50, blank=True)
