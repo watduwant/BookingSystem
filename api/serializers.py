@@ -98,6 +98,19 @@ class PathologicalTestServiceSerializer(serializers.ModelSerializer):
 
 
 class ShopSerializer(ModelSerializer):
+
+    @transaction.atomic
+    def validate(self, attrs):
+        userid = self.context.get('request').data.get('Shop_owner')
+        user = User.objects.get(id=userid)
+
+        if user.status == USER_STATUS.CR:
+            raise serializers.ValidationError(
+                {"error": f"{user.email} is not Shop Owner"}
+            )
+        return attrs
+
+
     class Meta:
         model = Shop
         fields = ['id', 'Name', 'Shop_owner', 'Address', 'Status', 'OffDay', 'Interior_image', 'Image', 'Opening_time',

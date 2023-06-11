@@ -58,6 +58,14 @@ class ShopViewSet(BaseClass):
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
 
+    def get_queryset(self):
+        queryset = Shop.objects.all()
+        if self.action == 'list':
+            queryset = Shop.objects.filter(Shop_owner__email=self.request.user.email)
+        if self.action == 'retrieve':
+            queryset = Appointment.objects.filter(appointment_user=self.request.user)
+        return queryset
+
     def get_serializer(self, *args, **kwargs):
         """
         Use a custom serializer that includes nested objects.
@@ -178,8 +186,6 @@ class AppointmentViewSet(BaseClass):
 
 
 class UserViewSet(BaseClass):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
