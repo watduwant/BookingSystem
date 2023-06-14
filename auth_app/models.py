@@ -2,7 +2,7 @@ import random  # from web
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django_lifecycle import hook, LifecycleModel, AFTER_CREATE, BEFORE_CREATE
+from django_lifecycle import hook, LifecycleModel, AFTER_CREATE
 
 from api.static_variables import USER_STATUS
 from .manager import UserManager

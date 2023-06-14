@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -39,6 +40,7 @@ from .serializers import (
     ServiceDetailDayListTimeSerializer,
     AppointmentListSerializer
 )
+from .static_variables import USER_STATUS
 
 
 # Create your views here.
@@ -145,13 +147,19 @@ class AppointmentServicesViewset(BaseClass):
     permission_classes = [IsAuthenticated]
     serializer_class = AppointmentServicesSerializer
 
+    class CustomAPIException(APIException):
+        status_code = 400
+        default_detail = 'You are not the shop owner or associated with any shop'
+
     def get_queryset(self):
         user = self.request.user
         service_id = self.request.query_params.get('service_id', None)
-        if service_id:
-            return ServiceDetailsDay.objects.filter(ServiceID__Clinic=user.shop, ServiceID__id=service_id)
-
-        return ServiceDetailsDay.objects.filter(ServiceID__Clinic=user.shop).order_by('ServiceID')
+        if user.status == USER_STATUS.SO:
+            if service_id:
+                return ServiceDetailsDay.objects.filter(ServiceID__Clinic=user.shop_user, ServiceID__id=service_id)
+            return ServiceDetailsDay.objects.filter(ServiceID__Clinic=user.shop_user).order_by('ServiceID')
+        else:
+            raise self.CustomAPIException()
 
 
 class AppointmentViewSet(BaseClass):
@@ -186,7 +194,7 @@ class AppointmentViewSet(BaseClass):
 
 
 class UserViewSet(BaseClass):
-    queryset = User.objects.all()
+    queryset = User.objects.exclude(is_superuser=True)
     serializer_class = UserSerializer
 
     def get_queryset(self):
@@ -207,7 +215,7 @@ class HomeScreenViewset(APIView):
             serializer = HomeSreenSerializer(shop)
             return Response(serializer.data)
         except Shop.DoesNotExist:
-            return Response({"error": "You are not the ownwer or any shop"})
+            return Response({"error": "You are not the shop owner or associated with any shop"})
 
 
 class ViewDoctorViewset(BaseClass):
