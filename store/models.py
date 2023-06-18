@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 
-from api.static_variables import TIMESLOTS
+from api.static_variables import TIMESLOTS, SHOP_STATUS
 from auth_app.models import User
 
 
@@ -12,15 +12,11 @@ class Shop(models.Model):
     """
     Shop : in this project shop means Shop-> Clinic
     """
-    shop_status = (
-        ('E', 'ENABLE'),
-        ('D', 'DISABLE')
-    )
     Name = models.CharField(max_length=190, unique=True)
     Shop_owner = models.OneToOneField(
         User, on_delete=models.SET_NULL, blank=True, null=True, related_name="shop_user")
     Address = models.CharField(max_length=300)
-    Status = models.CharField(max_length=2, choices=shop_status, default='E')
+    Status = models.CharField(max_length=2, choices=SHOP_STATUS.shop_status, default=SHOP_STATUS.E)
     Interior_image = models.ImageField(
         upload_to='shops', blank=True, null=True)
     OffDay = models.CharField(max_length=10, default=TIMESLOTS.SUNDAY, choices=TIMESLOTS.week_days)

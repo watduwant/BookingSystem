@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 from drf_writable_nested import WritableNestedModelSerializer
+from phonenumber_field.formfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework.authtoken.views import Token
 from rest_framework.serializers import ModelSerializer
@@ -110,17 +111,33 @@ class ShopSerializer(ModelSerializer):
             )
         return attrs
 
-
     class Meta:
         model = Shop
         fields = ['id', 'Name', 'Shop_owner', 'Address', 'Status', 'OffDay', 'Interior_image', 'Image', 'Opening_time',
                   'Closing_time', 'Shop_url']
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserInfoSerializer(serializers.ModelSerializer):
+    shop = serializers.SerializerMethodField()
+
+    def get_shop(self, obj):
+        shop_queryset = Shop.objects.filter(Shop_owner=obj)
+        shop_serializer = ShopSerializer(instance=shop_queryset, many=True)
+        return shop_serializer.data
+
     class Meta:
         model = User
-        fields = ['id', 'email', 'password', 'profile_pic', 'mobile', 'status', 'city', 'pincode']
+        fields = ['id', 'email', 'age', 'gender', 'mobile', 'profile_pic', 'status', 'city', 'address', 'shop']
+
+
+class RegisterUserSerializer(serializers.ModelSerializer):
+    number = PhoneNumberField(region="IN")
+
+    class Meta:
+        model = User
+        fields = [
+            'id', 'email', 'password', 'profile_pic', 'mobile', 'status', 'city', 'pincode', 'age', 'gender', 'address'
+        ]
 
         extra_kwargs = {'password': {'write_only': True, 'required': True}}
 
@@ -131,7 +148,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ShopListSerializer(ModelSerializer):
-    Shop_owner = UserSerializer(read_only=True)
+    Shop_owner = UserInfoSerializer(read_only=True)
 
     class Meta:
         model = Shop
@@ -332,7 +349,7 @@ class AppointmentServicesSerializer(serializers.ModelSerializer):
 class AppointmentSerializer(WritableNestedModelSerializer):
     doctor = serializers.SerializerMethodField(read_only=True)
     time = serializers.SerializerMethodField(read_only=True)
-    user_data = UserSerializer(allow_null=True, required=False)
+    user_data = UserInfoSerializer(allow_null=True, required=False)
     slot_date = serializers.DateField(format='%Y-%m-%d', input_formats=['%Y-%m-%d'])
     user_code = serializers.CharField(
         source='appointment_user',
@@ -379,7 +396,7 @@ class AppointmentSerializer(WritableNestedModelSerializer):
         if validated_data.get('user_data'):
             user_data = validated_data.pop('user_data')
             if user_data:
-                user_serializer = UserSerializer(data=user_data)
+                user_serializer = UserInfoSerializer(data=user_data)
                 user_serializer.is_valid(raise_exception=True)
                 user = user_serializer.save()
                 if user:
@@ -413,7 +430,7 @@ class AppointmentSerializer(WritableNestedModelSerializer):
 class AppointmentListSerializer(serializers.ModelSerializer):
     doctor = DoctorSerializer(read_only=True)
     Service = ServicedetailDayTimeSerializer(read_only=True)
-    appointment_user = UserSerializer(read_only=True)
+    appointment_user = UserInfoSerializer(read_only=True)
 
     class Meta:
         model = Appointment

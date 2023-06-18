@@ -2,9 +2,9 @@ import random  # from web
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django_lifecycle import hook, LifecycleModel, AFTER_CREATE
+from phonenumber_field.modelfields import PhoneNumberField
 
-from api.static_variables import USER_STATUS
+from api.static_variables import USER_STATUS, GENDER_CHOICES
 from .manager import UserManager
 
 # # Create your models here.
@@ -33,7 +33,7 @@ rand_otp = random.randint(1000, 9999)  # from web
 #     instance.profile.save()
 
 
-class User(AbstractUser, LifecycleModel):
+class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
     is_PhoneVerified = models.BooleanField(default=False)  # from web
@@ -44,8 +44,11 @@ class User(AbstractUser, LifecycleModel):
     last_logout_time = models.DateTimeField(null=True, blank=True)
     objects = UserManager()
 
-    # extra fields 
-    mobile = models.CharField(max_length=15, blank=True, null=True)
+    age = models.IntegerField()
+    gender = models.CharField(choices=GENDER_CHOICES.Gender_Choices, max_length=6, null=True, blank=True)
+
+    # extra fields
+    mobile = PhoneNumberField(blank=True, unique=True)
     # otp = models.IntegerField(default=rand_otp)  # from web
     profile_pic = models.ImageField(upload_to='profile_pics', blank=True, null=True)
     status = models.CharField(max_length=20, choices=USER_STATUS.USER_ROLE)

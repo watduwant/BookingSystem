@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.views import Token
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -20,7 +21,7 @@ from store.models import (
     Pathological_Test_Service
 )
 from .serializers import (
-    UserSerializer,
+    RegisterUserSerializer,
     ShopSerializer,
     DoctorSerializer,
     ServicedetailDaySerializer,
@@ -38,7 +39,8 @@ from .serializers import (
     ShopListSerializer,
     ServiceListSerializer,
     ServiceDetailDayListTimeSerializer,
-    AppointmentListSerializer
+    AppointmentListSerializer,
+    UserInfoSerializer
 )
 from .static_variables import USER_STATUS
 
@@ -54,6 +56,32 @@ class BaseClass(ModelViewSet):
             "data": serializer.data,
         }
         return Response(data)
+
+
+class UserLogin(APIView):
+
+    def post(self, request, *args, **kwargs):
+        request = request.data
+        user = ""
+        if request:
+            if request.get('email'):
+                email = request.get('email')
+                user = User.objects.get(email=email)
+            if request.get('mobile'):
+                mobile = request.get('mobile')
+                user = User.objects.get(mobile=mobile)
+            if user.check_password(request.get('password')):
+                token, created = Token.objects.get_or_create(user=user)
+                return Response({
+                    'token': token.key,
+                    'user_id': user.pk,
+                    'mobile': user.mobile.national_number
+                })
+        else:
+            return Response({
+                "email/mobile": "NULL",
+                "password": "NULL"
+            })
 
 
 class ShopViewSet(BaseClass):
@@ -166,14 +194,15 @@ class AppointmentViewSet(BaseClass):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
     serializer_class = AppointmentSerializer
+    queryset = Appointment.objects.all()
 
-    def get_queryset(self):
-        queryset = Appointment.objects.all()
-        if self.action == 'list':
-            queryset = Appointment.objects.filter(appointment_user=self.request.user)
-        if self.action == 'retrieve':
-            queryset = Appointment.objects.filter(appointment_user=self.request.user)
-        return queryset
+    # def get_queryset(self):
+    #     queryset = Appointment.objects.all()
+    #     if self.action == 'list':
+    #         queryset = Appointment.objects.filter(appointment_user=self.request.user)
+    #     if self.action == 'retrieve':
+    #         queryset = Appointment.objects.filter(appointment_user=self.request.user)
+    #     return queryset
 
     def get_serializer(self, *args, **kwargs):
         """
@@ -193,12 +222,47 @@ class AppointmentViewSet(BaseClass):
         return serializer_class(*args, **kwargs)
 
 
-class UserViewSet(BaseClass):
+class RegisterUserViewSet(BaseClass):
+    http_method_names = ['post']
     queryset = User.objects.exclude(is_superuser=True)
-    serializer_class = UserSerializer
+    serializer_class = RegisterUserSerializer
+
+
+class UserViewSet(BaseClass):
+    http_method_names = ['get']
+    queryset = User.objects.exclude(is_superuser=True)
+    serializer_class = UserInfoSerializer
+
+    class CustomAPIException(APIException):
+        status_code = 400
+        default_detail = 'You are not Authorized to access this endpoint'
+
+    class payloadAPIException(APIException):
+        status_code = 400
+        default_detail = 'Please provide valid data'
 
     def get_queryset(self):
-        return User.objects.filter(email=self.request.user.email)
+
+        if self.request.data:
+            request = self.request.data
+            if request.get('user_id') and not request.get('mobile'):
+                return User.objects.exclude(is_superuser=True).filter(
+                    id=request.get('user_id')
+                )
+            if request.get('mobile') and not request.get('user_id'):
+                return User.objects.exclude(is_superuser=True).filter(
+                    mobile=request.get('mobile')
+                )
+            if request.get('user_id') and request.get('mobile'):
+                query = User.objects.exclude(is_superuser=True).filter(id=request['user_id'], mobile=request['mobile'])
+                if query:
+                    return query
+                else:
+                    raise self.payloadAPIException()
+        if not self.request.user.is_anonymous:
+            return User.objects.exclude(is_superuser=True)
+        else:
+            raise self.CustomAPIException()
 
 
 # class HomeScreenViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):

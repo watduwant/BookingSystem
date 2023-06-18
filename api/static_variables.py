@@ -1,8 +1,16 @@
 class USER_STATUS:
     CUSTOMER, CR, SHOPOWNER, SO = 'customer', 'cr', 'shopowner', 'so'
     USER_ROLE = (
-        ('cr', 'customer'),
-        ('so', 'shopowner'),
+        ('cr', CUSTOMER),
+        ('so', SHOPOWNER),
+    )
+
+
+class SHOP_STATUS:
+    E, D, ENABLE, DISABLE = 'E', 'D', 'ENABLE', 'DISABLE'
+    shop_status = (
+        ('E', ENABLE),
+        ('D', DISABLE)
     )
 
 
@@ -32,7 +40,7 @@ class TIMESLOTS:
 class GENDER_CHOICES:
     M, F, O = 'Male', 'Female', 'Other'
     Gender_Choices = (
-        ('M', 'Male'),
-        ('F', 'Female'),
-        ('O', 'Other'),
+        ('M', M),
+        ('F', F),
+        ('O', O),
     )
