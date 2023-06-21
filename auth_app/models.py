@@ -44,7 +44,7 @@ class User(AbstractUser):
     last_logout_time = models.DateTimeField(null=True, blank=True)
     objects = UserManager()
 
-    age = models.IntegerField()
+    age = models.IntegerField(null=True)
     gender = models.CharField(choices=GENDER_CHOICES.Gender_Choices, max_length=6, null=True, blank=True)
 
     # extra fields

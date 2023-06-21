@@ -48,6 +48,9 @@ from .static_variables import USER_STATUS
 # Create your views here.
 
 class BaseClass(ModelViewSet):
+    class CustomAPIException(APIException):
+        status_code = 400
+        default_detail = 'You are not authorized to access this endpoint'
 
     def list(self, request, *args, **kwargs):
         serializer = self.get_serializer(self.get_queryset(), many=True)
@@ -89,11 +92,16 @@ class ShopViewSet(BaseClass):
     serializer_class = ShopSerializer
 
     def get_queryset(self):
-        queryset = Shop.objects.all()
-        if self.action == 'list':
-            queryset = Shop.objects.filter(Shop_owner__email=self.request.user.email)
-        if self.action == 'retrieve':
-            queryset = Appointment.objects.filter(appointment_user=self.request.user)
+        user = self.request.user
+        if not user.is_anonymous:
+            if user.is_superuser:
+                return self.queryset.filter(Shop_owner__status=USER_STATUS.SO)
+            if self.action == 'list':
+                queryset = Shop.objects.filter(Shop_owner__email=self.request.user.email)
+            if self.action == 'retrieve':
+                queryset = Appointment.objects.filter(appointment_user=self.request.user)
+        else:
+            raise self.CustomAPIException()
         return queryset
 
     def get_serializer(self, *args, **kwargs):
@@ -174,6 +182,7 @@ class AppointmentServicesViewset(BaseClass):
     http_method_names = ['get']
     permission_classes = [IsAuthenticated]
     serializer_class = AppointmentServicesSerializer
+    queryset = ServiceDetailsDay.objects.all()
 
     class CustomAPIException(APIException):
         status_code = 400
@@ -184,8 +193,9 @@ class AppointmentServicesViewset(BaseClass):
         service_id = self.request.query_params.get('service_id', None)
         if user.status == USER_STATUS.SO:
             if service_id:
-                return ServiceDetailsDay.objects.filter(ServiceID__Clinic=user.shop_user, ServiceID__id=service_id)
-            return ServiceDetailsDay.objects.filter(ServiceID__Clinic=user.shop_user).order_by('ServiceID')
+                return ServiceDetailsDay.objects.filter(ServiceID__id=service_id)
+            # return ServiceDetailsDay.objects.filter(ServiceID__Clinic=user.shop_user).order_by('ServiceID')
+            return ServiceDetailsDay.objects.all()
         else:
             raise self.CustomAPIException()
 

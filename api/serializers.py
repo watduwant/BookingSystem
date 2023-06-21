@@ -132,6 +132,7 @@ class UserInfoSerializer(serializers.ModelSerializer):
 
 class RegisterUserSerializer(serializers.ModelSerializer):
     number = PhoneNumberField(region="IN")
+    age = serializers.IntegerField(required=True)
 
     class Meta:
         model = User
