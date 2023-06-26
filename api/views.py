@@ -87,6 +87,30 @@ class UserLogin(APIView):
             })
 
 
+class ShopAppointmentViewSet(BaseClass):
+    http_method_names = ['get']
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentListSerializer
+
+    def get_queryset(self):
+        try:
+            if self.request.user.status == USER_STATUS.CR:
+                raise
+            if self.request.user.status == USER_STATUS.SO:
+                return self.queryset.filter(appointment_user=self.request.user.id)
+        except:
+            raise self.CustomAPIException()
+
+
+class UserAppointmentViewSet(BaseClass):
+    http_method_names = ['get']
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentListSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(appointment_user=self.request.user.id)
+
+
 class ShopViewSet(BaseClass):
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer

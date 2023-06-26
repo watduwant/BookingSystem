@@ -377,7 +377,7 @@ class AppointmentSerializer(WritableNestedModelSerializer):
             raise serializers.ValidationError(
                 {"error": "Please provide user information."}
             )
-        elif token_user.status == USER_STATUS.CR and requests.data.get('user_data'):
+        if token_user.status == USER_STATUS.CR and requests.data.get('user_data'):
             raise serializers.ValidationError(
                 {"error": "Please Don't added any extra stuff."}
             )

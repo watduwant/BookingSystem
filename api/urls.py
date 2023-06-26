@@ -4,10 +4,12 @@ from rest_framework.routers import DefaultRouter
 from .views import ShopViewSet, UserViewSet, DoctorViewSet, ServiceViewSet, ServicedetailDayViewSet, \
     ServicedetailDayTimeViewSet, AppointmentViewSet, HomeScreenViewset, ViewDoctorViewset, phlebotomistViewset, \
     OrderServiceViewSet, PathoOrdersViewSet, PathologicalTestServiceViewset, AppointmentServicesViewset, \
-    RegisterUserViewSet, UserLogin
+    RegisterUserViewSet, UserLogin, ShopAppointmentViewSet, UserAppointmentViewSet
 
 router = DefaultRouter()
 router.register('shops', ShopViewSet, basename='shops')
+router.register('appointment_based_on_shops', ShopAppointmentViewSet, basename='shops')
+router.register('appointment_based_on_user', UserAppointmentViewSet, basename='shops')
 # router.register('profiles', ProfileViewSet, basename='profiles')
 router.register('register', RegisterUserViewSet, basename='register_users')
 router.register('profile360', UserViewSet, basename='users')
