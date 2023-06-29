@@ -1,10 +1,28 @@
-import calendar
-from datetime import datetime
+from datetime import datetime, timedelta
 
+from rest_framework import serializers
+
+from api.models import MasterConfig
 from store.models import ServiceDetailsDayTime
 
 
 class GetServiceSlot(object):
+    @staticmethod
+    def slot_flexibility(slot_date):
+        master_object = None
+        try:
+            master_object = MasterConfig.objects.last()
+            master_object = master_object.appointment_slot_flexibility
+            open_day = slot_date + timedelta(master_object)
+            return open_day
+        except Exception:
+            if not master_object:
+                raise serializers.ValidationError(
+                    {"error": f"Exception from {__class__.__module__} and error is : Create MasterObject in Database"}
+                )
+            raise serializers.ValidationError(
+                {"error": f"Exception from {__class__.__module__}"}
+            )
 
     @staticmethod
     def service_data(service_id):
@@ -28,11 +46,17 @@ class GetServiceSlot(object):
 
     def process(self, slot_date, service):
         date = self.string_date_to_date(slot_date)
+        open_day = self.slot_flexibility(date)
         slot_date_list = []
-        cal = calendar.Calendar()
         weekday = self.service_data(service).ServiceDetailsDayID.Day
+        delta = timedelta(days=1)
 
-        for day in cal.itermonthdates(date.year, date.month):
-            if day.weekday() == int(weekday) and day.month == date.month and date <= day:
-                slot_date_list.append(day.strftime("%Y-%m-%d"))
+        while date <= open_day:
+            if date.weekday() == int(weekday):
+                slot_date_list.append(
+                    date.strftime(
+                        "%Y-%m-%d"
+                    )
+                )
+            date += delta
         return self.check_slot(date, slot_date_list)

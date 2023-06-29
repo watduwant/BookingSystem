@@ -363,15 +363,20 @@ class AppointmentSerializer(WritableNestedModelSerializer):
         slot = GetServiceSlot()
         token_user = requests.user
         slot_date = requests.data.get('slot_date')
+        slot_date_obj = slot.string_date_to_date(slot_date)
+        open_day = slot.slot_flexibility(slot_date_obj)
 
-        if datetime.datetime.now().date().month < slot.string_date_to_date(
-                slot_date).month:
+        if datetime.datetime.now().date().month > open_day.month:
             raise serializers.ValidationError(
                 {"error": "Please provide valid slot date information. it's future month date"}
             )
-        if datetime.datetime.now().month > slot.string_date_to_date(slot_date).month:
+        if datetime.datetime.now().month > slot_date_obj.month:
             raise serializers.ValidationError(
                 {"error": "Please provide valid slot date information. it's past month date"}
+            )
+        if slot_date_obj < datetime.datetime.now().date():
+            raise serializers.ValidationError(
+                {"error": "Please provide valid slot date information. it's past month or date"}
             )
         if token_user.status == USER_STATUS.SO and not requests.data.get('user_data'):
             raise serializers.ValidationError(
