@@ -62,28 +62,34 @@ class BaseClass(ModelViewSet):
 
 
 class UserLogin(APIView):
+    http_method_names = ['post']
 
-    def post(self, request, *args, **kwargs):
-        request = request.data
-        user = ""
-        if request:
-            if request.get('email'):
-                email = request.get('email')
-                user = User.objects.get(email=email)
-            if request.get('mobile'):
-                mobile = request.get('mobile')
-                user = User.objects.get(mobile=mobile)
-            if user.check_password(request.get('password')):
-                token, created = Token.objects.get_or_create(user=user)
+    def post(self, request):
+        try:
+            request = request.data
+            user = ""
+            if request:
+                if request.get('email'):
+                    email = request.get('email')
+                    user = User.objects.filter(email=email).first()
+                if request.get('mobile'):
+                    mobile = request.get('mobile')
+                    user = User.objects.filter(mobile=mobile).first()
+                if user.check_password(request.get('password')):
+                    token, created = Token.objects.get_or_create(user=user)
+                    return Response({
+                        'token': token.key,
+                        'user_id': user.pk,
+                        'mobile': user.mobile.national_number
+                    })
+            else:
                 return Response({
-                    'token': token.key,
-                    'user_id': user.pk,
-                    'mobile': user.mobile.national_number
+                    "email/mobile": "NULL",
+                    "password": "NULL"
                 })
-        else:
+        except Exception as err:
             return Response({
-                "email/mobile": "NULL",
-                "password": "NULL"
+                "error": "you provided credential is not valid!!",
             })
 
 
@@ -97,7 +103,7 @@ class ShopAppointmentViewSet(BaseClass):
             if self.request.user.status == USER_STATUS.CR:
                 raise
             if self.request.user.status == USER_STATUS.SO:
-                return self.queryset.filter(appointment_user=self.request.user.id)
+                return self.queryset.filter(Service__ServiceDetailsDayID__ServiceID__Clinic__Shop_owner=self.request.user)
         except:
             raise self.CustomAPIException()
 
