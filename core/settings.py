@@ -50,7 +50,6 @@ INSTALLED_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'rest_framework_simplejwt',
     'phonenumber_field',
     'django_extensions',
     'rest_framework',

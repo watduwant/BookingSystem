@@ -350,7 +350,7 @@ class AppointmentServicesSerializer(serializers.ModelSerializer):
 class AppointmentSerializer(WritableNestedModelSerializer):
     doctor = serializers.SerializerMethodField(read_only=True)
     time = serializers.SerializerMethodField(read_only=True)
-    user_data = UserInfoSerializer(allow_null=True, required=False)
+    user_data = serializers.DictField(allow_null=True, required=False)
     slot_date = serializers.DateField(format='%Y-%m-%d', input_formats=['%Y-%m-%d'])
     user_code = serializers.CharField(
         source='appointment_user',
@@ -399,21 +399,36 @@ class AppointmentSerializer(WritableNestedModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        appointment_user = None
         if validated_data.get('user_data'):
             user_data = validated_data.pop('user_data')
             if user_data:
-                user_serializer = UserInfoSerializer(data=user_data)
-                user_serializer.is_valid(raise_exception=True)
-                user = user_serializer.save()
-                if user:
-                    print("user create")
+                existing_user = User.objects.filter(mobile=user_data.get('mobile')).first()
+                validated_data.pop('token_user')
+                if existing_user:
+                    appointment_user = existing_user
+                else:
+                    user_serializer = UserInfoSerializer(data=user_data)
+                    if user_serializer.is_valid():
+                        user = user_serializer.save()
+                        appointment_user = user
+                    else:
+                        errors = user_serializer.errors
+                        errors['mobile'] = ["User data not found"]
+                        raise serializers.ValidationError(
+                            {"user_data": errors}
+                        )
+                    if user:
+                        print("user create")
+        else:
+            appointment_user = validated_data.pop('token_user')
 
         service_details_day_time = ServiceDetailsDayTime.objects.filter(id=validated_data.get('Service').id).first()
         if service_details_day_time:
             validated_data['time'] = service_details_day_time.Time
         else:
             validated_data['time'] = datetime.datetime.now().time()
-        validated_data['appointment_user'] = validated_data.pop('token_user')
+        validated_data['appointment_user'] = appointment_user
         instance = Appointment.objects.create(**validated_data)
         return instance
 
