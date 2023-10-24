@@ -7,3 +7,4 @@ class MasterConfig(models.Model):
 
     def __str__(self):
         return f" appointment_slot_flexibility : {self.appointment_slot_flexibility}"
+

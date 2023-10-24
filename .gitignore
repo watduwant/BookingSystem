@@ -87,4 +87,5 @@ GitHub.sublime-settings
 
 
 # migrations
+*/migrations/0*.py 
 /auth_app/migrations/*

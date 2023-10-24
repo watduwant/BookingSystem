@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&^55ajgaphx+08&&lwrz1rtph&ipzw@f=yv$#(#6h$lsj0rz1t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False # True
 
-ALLOWED_HOSTS = []  # ['watduwantapi.pythonanywhere.com']
+ALLOWED_HOSTS = ['api.watduwant.in','watduwant.in']  # ['watduwantapi.pythonanywhere.com'] '139.59.79.173'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 SITE_ID = 2
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    'rest_framework_simplejwt',
     'phonenumber_field',
     'django_extensions',
     'rest_framework',
@@ -60,7 +61,7 @@ THIRD_PARTY_APPS = [
     'dj_rest_auth',
     'corsheaders',
     'allauth.socialaccount.providers.google',
-    'drf_yasg',  # 'django.contrib.staticfiles',  # required for serving swagger ui's css/js files
+    'drf_yasg',  #'django.contrib.staticfiles',  # required for serving swagger ui's css/js files
     # local apps
 ]
 
@@ -96,9 +97,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
+'''
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-]
+]'''
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -137,6 +141,7 @@ AUTHENTICATION_BACKENDS = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database
+#rm */migrations/0*.py 
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # DATABASES = {
@@ -149,6 +154,14 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+'''
+DATABASES = {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'bookingsys',
         'USER': 'postgres',
@@ -157,7 +170,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
+'''
 AUTH_USER_MODEL = 'auth_app.User'
 
 # Password validation
@@ -212,3 +225,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = ...
+EMAIL_HOST_PASSWORD = ...

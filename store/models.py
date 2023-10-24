@@ -193,10 +193,30 @@ class ServiceDetailsDayTime(models.Model):
 
     class Meta:
         unique_together = (('ServiceDetailsDayID', 'Time'),)
-
+ 
     @property
-    def get_service_id(self):
+    def serviceID(self):
         return self.ServiceDetailsDayID.ServiceID.id
+    
+    @property
+    def cinicName(self):
+        return self.ServiceDetailsDayID.ServiceID.Clinic.Name
+    
+    @property
+    def cinicID(self):
+        return self.ServiceDetailsDayID.ServiceID.Clinic.id
+    @property
+    def doctorName(self):
+        return self.ServiceDetailsDayID.ServiceID.Doctor.Name
+    
+    @property
+    def doctorID(self):
+        return self.ServiceDetailsDayID.ServiceID.Doctor.id
+    
+    
+    @property
+    def serviceDay(self):
+        return self.ServiceDetailsDayID.Day
 
     def __str__(self):
         return self.ServiceDetailsDayID.get_name_day + "--" + str(self.Time)

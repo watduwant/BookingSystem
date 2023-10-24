@@ -1,9 +1,6 @@
+from pathlib import Path
 from django.contrib import admin
-
-
-from .models import (Shop, Doctor, Service, ServiceDetailsDay, Pathological_Test,
-                     Pathological_Test_Service, Phlebotomist, Order, OrderService, ShippingAddress,
-                     ServiceDetailsDayTime, Cart)
+from .models import Shop, Doctor, Service, ServiceDetailsDay,ServiceDetailsDayTime, Pathological_Test, Pathological_Test_Service, Phlebotomist, Order, OrderService, ShippingAddress, ServiceDetailsDayTime, Cart
 
 # Register your models here.
 admin.site.register(Shop)

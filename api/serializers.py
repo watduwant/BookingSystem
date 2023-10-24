@@ -51,17 +51,23 @@ class ServiceDaysSerializer(serializers.ModelSerializer):
 
 
 class ServicedetailDayTimeSerializer(serializers.ModelSerializer):
+    doctorID   = ServiceDetailsDayTime.doctorID
     class Meta:
         model = ServiceDetailsDayTime
-        fields = ['id', 'ServiceDetailsDayID', 'Time', 'Visit_capacity']
+        fields = ['id', 'ServiceDetailsDayID','doctorID', 'Time', 'Visit_capacity']
 
 
 class ServiceDetailDayListTimeSerializer(serializers.ModelSerializer):
-    ServiceDetailsDayID = ServiceDaysSerializer(read_only=True)
+    serviceDay   = ServiceDetailsDayTime.serviceDay
+    serviceID           = ServiceDetailsDayTime.serviceID
+    cinicName           = ServiceDetailsDayTime.cinicName
+    doctorName          = ServiceDetailsDayTime.doctorName
+    cinicID             = ServiceDetailsDayTime.cinicID
+    doctorID            = ServiceDetailsDayTime.doctorID
 
     class Meta:
         model = ServiceDetailsDayTime
-        fields = ['id', 'ServiceDetailsDayID', 'Time', 'Visit_capacity']
+        fields = ['id','cinicID','doctorID','serviceID', 'ServiceDetailsDayID','cinicName','doctorName','serviceDay', 'Time', 'Visit_capacity']
 
 
 class PutAppointmentSerializer(serializers.ModelSerializer):

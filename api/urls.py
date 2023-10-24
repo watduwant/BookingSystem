@@ -8,8 +8,8 @@ from .views import ShopViewSet, UserViewSet, DoctorViewSet, ServiceViewSet, Serv
 
 router = DefaultRouter()
 router.register('shops', ShopViewSet, basename='shops')
-router.register('appointment_based_on_shops', ShopAppointmentViewSet, basename='shops')
-router.register('appointment_based_on_user', UserAppointmentViewSet, basename='shops')
+router.register('shopAppointmentHistory', ShopAppointmentViewSet, basename='appointment_based_on_shops')
+router.register('userAppointmentHistory', UserAppointmentViewSet, basename='appointment_based_on_user')
 # router.register('profiles', ProfileViewSet, basename='profiles')
 router.register('register', RegisterUserViewSet, basename='register_users')
 router.register('profile360', UserViewSet, basename='users')

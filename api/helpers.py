@@ -50,14 +50,13 @@ class GetServiceSlot(object):
         slot_date_list = []
         weekday = self.service_data(service).ServiceDetailsDayID.Day
         delta = timedelta(days=1)
-        temp_date = date
-
-        while temp_date <= open_day:
-            if temp_date.weekday() == int(weekday):
+        tempDate = date
+        while tempDate <= open_day:
+            if tempDate.weekday() == int(weekday):
                 slot_date_list.append(
-                    temp_date.strftime(
+                    tempDate.strftime(
                         "%Y-%m-%d"
                     )
                 )
-            temp_date += delta
+            tempDate += delta
         return self.check_slot(date, slot_date_list)

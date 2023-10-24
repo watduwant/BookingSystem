@@ -220,12 +220,14 @@ class AppointmentServicesViewset(BaseClass):
 
     def get_queryset(self):
         user = self.request.user
+       
         service_id = self.request.query_params.get('service_id', None)
         if user.status == USER_STATUS.SO:
+            clinic = Shop.objects.get(Shop_owner =user)   
             if service_id:
                 return ServiceDetailsDay.objects.filter(ServiceID__id=service_id)
             # return ServiceDetailsDay.objects.filter(ServiceID__Clinic=user.shop_user).order_by('ServiceID')
-            return ServiceDetailsDay.objects.all()
+            return ServiceDetailsDay.objects.filter(ServiceID__Clinic=clinic) #ServiceDetailsDay.objects.all()
         else:
             raise self.CustomAPIException()
 
